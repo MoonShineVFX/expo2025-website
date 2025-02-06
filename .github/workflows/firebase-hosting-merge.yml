@@ -32,4 +32,4 @@ jobs:
           args: deploy --only hosting
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-          PROJECT_ID: roggamervisa
+          PROJECT_ID: expo2025-d9eec
