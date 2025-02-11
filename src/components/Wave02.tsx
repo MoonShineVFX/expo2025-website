@@ -1,68 +1,110 @@
 import { motion } from "framer-motion";
 
-const Wave02 = ({ position }: { position: "relative" | "absolute" }) => {
+const Wave02 = ({
+  position,
+  sceneStyle,
+}: {
+  position: "relative" | "absolute";
+  sceneStyle: string;
+}) => {
+  const transition = {
+    duration: 28,
+    repeat: Infinity,
+    ease: [0.55, 0.5, 0.45, 0.5],
+    times: [0, 1],
+  };
   return (
     <div
-      className={`w-full -bottom-[2px] left-0 overflow-hidden  z-50 h-[330px] ${
+      className={`w-full -bottom-[0] left-0 overflow-hidden  z-50 h-[330px] md:h-[1000px]  ${
         position === "relative" ? "relative" : "absolute bottom-0 left-0"
       }`}
     >
-      <motion.div
-        className="w-[2580px] h-[300px] z-0 absolute bottom-0 "
-        animate={{
-          x: ["0%", "calc(-100% + 100vw)"],
-        }}
-        transition={{
-          duration: 40,
-          repeat: Infinity,
-          repeatType: "reverse",
-          ease: "linear",
-        }}
-      >
-        <img src="./images/wave2_01.svg" alt="logo" className="w-full" />
-      </motion.div>
-      <motion.div
-        className="w-[2580px] h-[310px] absolute bottom-0 -z-[1] "
-        animate={{
-          x: ["0%", "calc(-100% + 100vw)"],
-        }}
-        transition={{
-          duration: 65,
-          repeat: Infinity,
-          repeatType: "reverse",
-          ease: "linear",
-        }}
-      >
-        <img src="./images/wave2_02.svg" alt="logo" className="w-full" />
-      </motion.div>
-      <motion.div
-        className="w-[2580px] h-[320px] absolute bottom-0 -z-[2]"
-        animate={{
-          x: ["0%", "calc(-100% + 100vw)"],
-        }}
-        transition={{
-          duration: 75,
-          repeat: Infinity,
-          repeatType: "reverse",
-          ease: "linear",
-        }}
-      >
-        <img src="./images/header_i03.svg" alt="logo" className="w-full" />
-      </motion.div>
-      <motion.div
-        className="w-[2580px] h-[330px] absolute bottom-0 -z-[3] "
-        animate={{
-          x: ["0%", "calc(-100% + 100vw)"],
-        }}
-        transition={{
-          duration: 55,
-          repeat: Infinity,
-          repeatType: "reverse",
-          ease: "linear",
-        }}
-      >
-        <img src="./images/wave2_04.svg" alt="logo" className="w-full" />
-      </motion.div>
+      <div className="w-[1200%] h-[100%] z-0 absolute bottom-0  ">
+        <motion.div
+          className="w-[100%] h-[100%] z-0 absolute bottom-[33%] "
+          animate={{
+            translateX: ["-50%", "-0%"],
+            y: [0, 15, 0],
+          }}
+          transition={{
+            duration: transition.duration - 10,
+            repeat: transition.repeat,
+            ease: transition.ease,
+            times: transition.times,
+            delay: -1,
+          }}
+          style={{
+            backgroundImage: "url('./images/wave3_04.svg')",
+            backgroundRepeat: "repeat-x",
+            backgroundSize: "25% auto",
+            backgroundPosition: "bottom",
+            transform: "translate3d(0, 0, 0)", // 開啟硬體加速
+          }}
+        />
+        <motion.div
+          className="w-[100%] h-[100%] z-0 absolute bottom-[27%]"
+          animate={{
+            translateX: ["-50%", "-0%"],
+            y: [0, 15, 0],
+          }}
+          transition={{
+            duration: transition.duration - 9,
+            repeat: transition.repeat,
+            ease: transition.ease,
+            times: transition.times,
+            delay: -2,
+          }}
+          style={{
+            backgroundImage: "url('./images/wave3_03.svg')",
+            backgroundRepeat: "repeat-x",
+            backgroundSize: "25% auto",
+            backgroundPosition: "bottom",
+            transform: "translate3d(0, 0, 0)", // 開啟硬體加速
+          }}
+        />
+        <motion.div
+          className="w-[100%] h-[100%] z-0 absolute bottom-[20%] "
+          animate={{
+            translateX: ["-50%", "-0%"],
+          }}
+          transition={{
+            duration: transition.duration - 5,
+            repeat: transition.repeat,
+            ease: transition.ease,
+            times: transition.times,
+            delay: -3,
+          }}
+          style={{
+            backgroundImage: "url('./images/wave3_02.svg')",
+            backgroundRepeat: "repeat-x",
+            backgroundSize: "25% auto",
+            backgroundPosition: "bottom",
+            transform: "translate3d(0, 0, 0)", // 開啟硬體加速
+          }}
+        />
+        <motion.div
+          className="w-[100%] h-[100%] z-0 absolute -bottom-0 "
+          animate={{
+            translateX: ["-50%", "-0%"],
+          }}
+          transition={{
+            duration: transition.duration,
+            repeat: transition.repeat,
+            ease: transition.ease,
+            times: transition.times,
+            delay: -4,
+          }}
+          style={{
+            backgroundImage: `url('./images/${sceneStyle}wave3_01.svg')`,
+            backgroundRepeat: "repeat-x",
+            backgroundSize: "25% auto",
+            backgroundPosition: "bottom ",
+            imageRendering: "pixelated", // 改善圖片渲染
+            backfaceVisibility: "hidden", // 防止渲染問題
+            transform: "translate3d(0, 0, 0)", // 開啟硬體加速
+          }}
+        />
+      </div>
     </div>
   );
 };
