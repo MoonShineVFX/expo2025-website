@@ -16,7 +16,7 @@ const Wave02 = ({
   return (
     <div
       className={`w-full -bottom-[0] left-0 overflow-hidden  z-50 h-[330px] md:h-[1000px]  ${
-        position === "relative" ? "relative" : "absolute bottom-0 left-0"
+        position === "relative" ? "relative" : "absolute top-0 left-0"
       }`}
     >
       <div className="w-[1200%] h-[100%] z-0 absolute bottom-0  ">
