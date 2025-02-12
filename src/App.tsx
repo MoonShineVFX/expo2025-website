@@ -5,7 +5,6 @@ import HomePage from "./components/HomePage";
 import { useEffect, useState } from "react";
 import { fetchSheetData } from "./utils/fetchSheetData";
 import Wave04 from "./components/Wave04";
-import WaveChart from "./components/WaveChart";
 import ChartLayers from "./components/ChartLayers";
 import Wave05 from "./components/Wave05";
 
