@@ -89,50 +89,37 @@ function App() {
       try {
         setLoading(true);
         const sheetData = await fetchSheetData();
-
-        // 檢查是否有 code 參數
-        const code = searchParams.get("code");
-        let vParam = "";
-        let pParam = "";
-
-        if (code) {
-          // 如果有 code，進行解密
-          try {
-            const decrypted = await decryptCode(code);
-            vParam = decrypted.v; // 直接使用解密後的 v 值
-            console.log("使用解密後的參數:", vParam);
-            pParam = decrypted.p;
-            console.log("使用解密後的參數:", pParam);
-          } catch (error) {
-            setError("解密失敗");
-            return;
-          }
-        } else {
-          // 如果沒有 code，使用原本的 v 參數
-          vParam = searchParams.get("v") || "";
-          pParam = searchParams.get("p") || "";
-        }
-
-        // 解析參數
+        const vParam = searchParams.get("v") || "";
+        const pParam = searchParams.get("p") || "";
         const match = vParam.match(/s(\d)(\d{3})(\d{3})?(\d{3})?/);
         const matchP = pParam.match(/(\d{2})(\d{2})(\d{2})/);
 
         if (matchP) {
-          const numbers = [matchP[1], matchP[2], matchP[3]].filter(Boolean);
-          setP1(numbers[0]);
-          setP2(numbers[1]);
-          setP3(numbers[2]);
+          setP1(matchP[1]);
+          setP2(matchP[2]);
+          setP3(matchP[3]);
         }
+
         if (match) {
           const numbers = [match[2], match[3], match[4]].filter(Boolean);
           console.log("要過濾的編號:", numbers);
 
+          // 先過濾出符合的資料
           const filteredData = sheetData.filter((item: ParsedSheetData) =>
             numbers.includes(item.formattedNumber)
           );
-          console.log("過濾後的資料:", filteredData);
 
-          setData(filteredData);
+          // 根據 numbers 的順序排序資料
+          const sortedData = numbers
+            .map((number) =>
+              filteredData.find(
+                (item: ParsedSheetData) => item.formattedNumber === number
+              )
+            )
+            .filter(Boolean) as ParsedSheetData[];
+
+          console.log("排序後的資料:", sortedData);
+          setData(sortedData);
         } else {
           setData(sheetData);
         }
