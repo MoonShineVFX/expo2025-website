@@ -1,46 +1,49 @@
 import { motion } from "framer-motion";
 
-const Wave02 = ({
+const Wave06 = ({
   position,
   sceneStyle,
 }: {
-  position: string;
+  position: "relative" | "absolute";
   sceneStyle: string;
 }) => {
   const transition = {
-    duration: 28,
+    duration: 30,
     repeat: Infinity,
     ease: [0.55, 0.5, 0.45, 0.5],
     times: [0, 1],
   };
   return (
     <div
-      className={`w-full -bottom-[0] left-0 overflow-hidden  z-50 h-[330px] md:h-[1000px]  ${position}`}
+      className={`w-full -bottom-[0] left-0 overflow-hidden  z-50 h-[450px] md:h-[1000px]  ${
+        position === "relative" ? "relative" : "absolute bottom-0 left-0"
+      }`}
     >
       <div className="w-[1200%] h-[100%] z-0 absolute bottom-0  ">
         <motion.div
-          className="w-[100%] h-[100%] z-0 absolute bottom-[33%] "
+          className="w-[100%] h-[100%] z-0 absolute bottom-[20%] "
           animate={{
             translateX: ["-50%", "-0%"],
             y: [0, 15, 0],
           }}
           transition={{
-            duration: transition.duration - 10,
+            duration: transition.duration - 14,
             repeat: transition.repeat,
             ease: transition.ease,
             times: transition.times,
             delay: -1,
           }}
           style={{
-            backgroundImage: "url('./images/wave3_04.svg')",
+            backgroundImage: "url('./images/wave4_04.svg')",
             backgroundRepeat: "repeat-x",
-            backgroundSize: "25% auto",
+            backgroundSize: "15% auto",
             backgroundPosition: "bottom",
             transform: "translate3d(0, 0, 0)", // 開啟硬體加速
+            opacity: 0.6,
           }}
         />
         <motion.div
-          className="w-[100%] h-[100%] z-0 absolute bottom-[27%]"
+          className="w-[100%] h-[100%] z-0 absolute bottom-[15%]"
           animate={{
             translateX: ["-50%", "-0%"],
             y: [0, 15, 0],
@@ -53,31 +56,33 @@ const Wave02 = ({
             delay: -2,
           }}
           style={{
-            backgroundImage: "url('./images/wave3_03.svg')",
+            backgroundImage: "url('./images/wave4_03.svg')",
             backgroundRepeat: "repeat-x",
-            backgroundSize: "25% auto",
+            backgroundSize: "15% auto",
             backgroundPosition: "bottom",
             transform: "translate3d(0, 0, 0)", // 開啟硬體加速
+            opacity: 0.6,
           }}
         />
         <motion.div
-          className="w-[100%] h-[100%] z-0 absolute bottom-[20%] "
+          className="w-[100%] h-[100%] z-0 absolute bottom-[10%] "
           animate={{
             translateX: ["-50%", "-0%"],
           }}
           transition={{
-            duration: transition.duration - 5,
+            duration: transition.duration - 8,
             repeat: transition.repeat,
             ease: transition.ease,
             times: transition.times,
             delay: -3,
           }}
           style={{
-            backgroundImage: "url('./images/wave3_02.svg')",
+            backgroundImage: "url('./images/wave4_02.svg')",
             backgroundRepeat: "repeat-x",
-            backgroundSize: "25% auto",
+            backgroundSize: "15% auto",
             backgroundPosition: "bottom",
             transform: "translate3d(0, 0, 0)", // 開啟硬體加速
+            opacity: 0.7,
           }}
         />
         <motion.div
@@ -93,39 +98,26 @@ const Wave02 = ({
             delay: -4,
           }}
           style={{
-            backgroundImage: `url('./images/${sceneStyle}wave3_01.svg')`,
+            backgroundImage: `url('./images/${sceneStyle}wave4_01.svg')`,
             backgroundRepeat: "repeat-x",
-            backgroundSize: "25% auto",
+            backgroundSize: "15% auto",
             backgroundPosition: "bottom ",
             imageRendering: "pixelated", // 改善圖片渲染
             backfaceVisibility: "hidden", // 防止渲染問題
             transform: "translate3d(0, 0, 0)", // 開啟硬體加速
+            opacity: 1,
           }}
         />
-        <motion.div
-          className="w-[100%] h-[100%] z-0 absolute bottom-2 "
-          animate={{
-            translateX: ["-50%", "-0%"],
-            y: [0, 5, 0],
-          }}
-          transition={{
-            duration: transition.duration + 10,
-            repeat: transition.repeat,
-            ease: transition.ease,
-            times: transition.times,
-          }}
-          style={{
-            backgroundImage: "url('./images/header_i05v2.svg')",
-            backgroundRepeat: "repeat-x",
-            backgroundSize: "18% auto",
-            backgroundPosition: "bottom",
-            transform: "translate3d(0, 0, 0)", // 開啟硬體加速
-            opacity: 0.9,
-          }}
+      </div>
+      <div className="absolute bottom-[25%] left-0 w-[30%] z-10 ">
+        <img
+          src={`./images/${sceneStyle}icon01.png`}
+          alt=""
+          className="w-full max-w-full"
         />
       </div>
     </div>
   );
 };
 
-export default Wave02;
+export default Wave06;

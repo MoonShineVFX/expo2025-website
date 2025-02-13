@@ -22,19 +22,19 @@ const ChartLayers = ({ pink = 0, green = 0, blue = 0 }: ChartLayersProps) => {
   };
 
   return (
-    <div className="flex flex-row gap-2 absolute bottom-0 left-0 w-full h-full">
+    <div className="flex flex-row gap-2 absolute bottom-0 left-[0 w-full h-full">
       {/* Pink Layers */}
-      <div className="absolute bottom-0 left-0 w-full">
+      <div className="absolute bottom-0 left-[4%] w-full">
         {generateLayers("pink", pink)}
       </div>
 
       {/* Green Layers */}
-      <div className="absolute bottom-0 left-0 w-full">
+      <div className="absolute bottom-0 left-[3%] w-full">
         {generateLayers("green", green)}
       </div>
 
       {/* Blue Layers */}
-      <div className="absolute bottom-0 left-0 w-full">
+      <div className="absolute bottom-0 left-[2%] w-full">
         {generateLayers("blue", blue)}
       </div>
     </div>

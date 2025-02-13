@@ -1,12 +1,12 @@
 import "./App.css";
 import { useSearchParams } from "react-router-dom";
 import Wave02 from "./components/Wave02";
-import HomePage from "./components/HomePage";
 import { useEffect, useState } from "react";
 import { fetchSheetData } from "./utils/fetchSheetData";
-import Wave04 from "./components/Wave04";
 import ChartLayers from "./components/ChartLayers";
 import Wave05 from "./components/Wave05";
+import Wave06 from "./components/Wave06";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface ParsedSheetData {
   number: number;
@@ -34,11 +34,27 @@ interface DecryptResponse {
 function App() {
   const [searchParams] = useSearchParams();
   const [data, setData] = useState<ParsedSheetData[]>([]);
+  const [currentStyle, setCurrentStyle] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [p1, setP1] = useState("");
   const [p2, setP2] = useState("");
   const [p3, setP3] = useState("");
+  const [language, setLanguage] = useState<"jp" | "en" | "zh" | null>(null);
+  const [isVisible, setIsVisible] = useState(true);
+  const [showContent, setShowContent] = useState(false);
+  const languageArray = {
+    jp: {
+      title: "この美しい島を\n共有する機会をくださり、\n感謝します。",
+    },
+    en: {
+      title:
+        "Thank you so much\nfor giving us the opportunity\nto share this beautiful island.",
+    },
+    zh: {
+      title: "非常感謝您\n讓我們有機會分享\n這個美麗的島嶼。",
+    },
+  };
 
   const styleArray = [
     {
@@ -122,6 +138,7 @@ function App() {
         if (match) {
           const numbers = [match[2], match[3], match[4]].filter(Boolean);
           console.log("要過濾的編號:", numbers);
+          setCurrentStyle("s" + match[1]);
 
           // 先過濾出符合的資料
           const filteredData = sheetData.filter((item: ParsedSheetData) =>
@@ -152,37 +169,157 @@ function App() {
     loadData();
   }, [searchParams]);
 
+  const handleLanguageChange = (lang: "jp" | "en" | "zh") => {
+    setLanguage(lang);
+
+    setTimeout(() => {
+      setIsVisible(false);
+      // 當語言選擇區塊完全消失後，顯示主要內容
+      setTimeout(() => {
+        setShowContent(true);
+      }, 1000);
+    }, 1500);
+  };
+
   if (loading) return <div>載入中...</div>;
   if (error) return <div>錯誤: {error}</div>;
   return (
     <div className="min-h-screen relative">
-      <HomePage />
+      <AnimatePresence>
+        {isVisible && (
+          <motion.div
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+            className="fixed top-0 left-0 w-full h-screen bg-cyan-400/20 backdrop-blur-sm z-[999] flex flex-col items-center justify-center"
+          >
+            <div className="text-white text-xl flex flex-col gap-6 items-center justify-center">
+              <AnimatePresence>
+                <motion.p
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{
+                    opacity: language === null ? 1 : language === "jp" ? 1 : 0,
+                    y: 0,
+                    scale: language === null ? 1 : language === "jp" ? 1.2 : 1,
+                  }}
+                  exit={{ opacity: 0, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  言語を選択してください
+                </motion.p>
+                <motion.p
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{
+                    opacity: language === null ? 1 : language === "en" ? 1 : 0,
+                    y: 0,
+                    scale: language === null ? 1 : language === "en" ? 1.2 : 1,
+                  }}
+                  exit={{ opacity: 0, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  Please select a language
+                </motion.p>
+                <motion.p
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{
+                    opacity: language === null ? 1 : language === "zh" ? 1 : 0,
+                    y: 0,
+                    scale: language === null ? 1 : language === "zh" ? 1.2 : 1,
+                  }}
+                  exit={{ opacity: 0, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  請選擇語言
+                </motion.p>
+              </AnimatePresence>
+            </div>
+            <div className="flex flex-col gap-2 items-center justify-center mt-[7%]">
+              <div className="flex flex-row gap-4 items-center justify-center">
+                <button
+                  onClick={() => handleLanguageChange("jp")}
+                  className={`border border-white p-2 ${
+                    language === "jp"
+                      ? "bg-white text-[#5AB9F1]"
+                      : "text-white hover:bg-white hover:text-[#5AB9F1]"
+                  }`}
+                >
+                  JP
+                </button>
+                <button
+                  onClick={() => handleLanguageChange("en")}
+                  className={`border border-white p-2 ${
+                    language === "en"
+                      ? "bg-white text-[#5AB9F1]"
+                      : "text-white hover:bg-white hover:text-[#5AB9F1]"
+                  }`}
+                >
+                  EN
+                </button>
+                <button
+                  onClick={() => handleLanguageChange("zh")}
+                  className={`border border-white p-2 ${
+                    language === "zh"
+                      ? "bg-white text-[#5AB9F1]"
+                      : "text-white hover:bg-white hover:text-[#5AB9F1]"
+                  }`}
+                >
+                  ZH
+                </button>
+              </div>
+              <div className="text-white text-2xl mt-2 tracking-widest "></div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* 主要內容 */}
 
       {/*  Section */}
       <section className="pb-[25%] min-h-screen flex flex-col items-center justify-center px-4 text-center bg-gradient-to-r from-[#76C6F3] via-[#5AB9F1] via-[#42ACE9] to-[#048BDB] relative">
-        <div className="flex flex-col items-start justify-center tracking-widest">
-          <p className="text-xl md:text-2xl mb-2 text-white">非常感謝您</p>
-          <p className="text-xl md:text-2xl mb-2 text-white">
-            讓我們有機會分享
-          </p>
-          <p className="text-xl md:text-2xl text-white">這個美麗的島嶼。</p>
-        </div>
-        <div className="w-10/12 h-full  items-center justify-center relative">
-          <img src="./images/chart_main.svg" alt="logo" />
-          <ChartLayers
-            pink={parseInt(p1)} // 會自動疊加 10-90 的圖層
-            green={parseInt(p2)} // 會自動疊加 10-50 的圖層
-            blue={parseInt(p3)} // 會自動疊加 10-30 的圖層
-          />
-          <div className=" bottom-0 left-0 w-8/12 mx-auto h-full flex  items-center justify-between">
-            <div className="text-white/80 text-sm">生命</div>
-            <div className="text-white/80 text-sm">自然</div>
-            <div className="text-white/80 text-sm">未來</div>
-          </div>
-        </div>
-        {/* <Wave01 /> */}
+        <AnimatePresence>
+          {showContent && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1.5 }}
+              className="flex flex-col items-center justify-center"
+            >
+              <motion.div
+                className="flex flex-col items-start justify-center tracking-widest"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 0.5 }}
+              >
+                <p className="text-xl md:text-2xl mb-2 text-white whitespace-pre-wrap text-left   leading-12">
+                  {language && languageArray[language].title}
+                </p>
+              </motion.div>
 
-        <Wave04 position={"absolute"} />
+              <motion.div
+                className="w-10/12 h-full items-center justify-center relative"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 1 }}
+              >
+                <img src="./images/chart_main.svg" alt="logo" />
+                <ChartLayers
+                  pink={parseInt(p1)}
+                  green={parseInt(p2)}
+                  blue={parseInt(p3)}
+                />
+                <div className="bottom-0 left-0 w-8/12 mx-auto h-full flex items-center justify-between">
+                  <div className="text-white/80 text-sm">生命</div>
+                  <div className="text-white/80 text-sm">自然</div>
+                  <div className="text-white/80 text-sm">未來</div>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <Wave02
+          position={"absolute bottom-0 left-0"}
+          sceneStyle={currentStyle}
+        />
       </section>
 
       {/* Intro Section */}
@@ -190,7 +327,6 @@ function App() {
         <div className="flex flex-col items-center justify-center my-15">
           <h2 className="text-3xl md:text-4xl font-bold">您的3套行程推薦</h2>
         </div>
-        {/* <Wave02 position={"relative"} sceneStyle={currentStyle} /> */}
       </section>
 
       {/* Itinerary Sections */}
@@ -209,10 +345,11 @@ function App() {
               background: currentStyle.gradient,
             }}
           >
-            <Wave02 position={"relative"} sceneStyle={currentStyle.style} />
-            <div className="w-10/12 mx-auto ">
-              <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center flex flex-row items-center justify-between gap-2">
-                <span>行程{index + 1}</span>
+            <Wave06 position={"relative"} sceneStyle={currentStyle.style} />
+
+            <div className="w-10/12 mx-auto relative ">
+              <h2 className="text-2xl md:text-3xl font-bold mb- text-center flex flex-row items-center justify-between gap-2">
+                <span>0{index + 1}</span>
                 <div>{item.name_zh}</div>
               </h2>
               <div
@@ -238,6 +375,9 @@ function App() {
                   </video>
                 )}
               </div>
+              <div className="flex flex-row items-center justify-center gap-2 my-4">
+                <img src="./images/dlbtn.png" alt="" className="w-[35px]" />
+              </div>
               <div className="prose max-w-none md:prose-lg mx-auto leading-8 text-[#1E1E1E] px-1">
                 {item.desc_zh}
               </div>
@@ -253,8 +393,11 @@ function App() {
           <img
             src="./images/footer_top.png"
             alt="logo"
-            className="w-full absolute top-0 left-0"
+            className="w-full  top-0 left-0"
           />
+          <div className="flex flex-row items-center justify-center gap-2 mt-14">
+            <img src="./images/sharebtn.png" alt="" className="w-[35px]" />
+          </div>
         </div>
       </footer>
     </div>
