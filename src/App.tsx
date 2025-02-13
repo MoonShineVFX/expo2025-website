@@ -89,8 +89,23 @@ function App() {
       try {
         setLoading(true);
         const sheetData = await fetchSheetData();
-        const vParam = searchParams.get("v") || "";
-        const pParam = searchParams.get("p") || "";
+        const code = searchParams.get("code");
+        let vParam = "";
+        let pParam = "";
+
+        if (code) {
+          try {
+            const decrypted = await decryptCode(code);
+            vParam = decrypted.v;
+            pParam = decrypted.p;
+          } catch (error) {
+            setError("解密失敗");
+            return;
+          }
+        } else {
+          vParam = searchParams.get("v") || "";
+          pParam = searchParams.get("p") || "";
+        }
         const match = vParam.match(/s(\d)(\d{3})(\d{3})?(\d{3})?/);
         const matchP = pParam.match(/(\d{2})(\d{2})(\d{2})/);
 
@@ -98,6 +113,10 @@ function App() {
           setP1(matchP[1]);
           setP2(matchP[2]);
           setP3(matchP[3]);
+        } else {
+          setP1("40");
+          setP2("30");
+          setP3("30");
         }
 
         if (match) {
