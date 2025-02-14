@@ -38,6 +38,7 @@ const Wave02 = ({
             backgroundPosition: "bottom",
             transform: "translate3d(0, 0, 0)", // 開啟硬體加速
             backfaceVisibility: "hidden", // 防止渲染問題
+            opacity: 0.8,
           }}
         />
         <motion.div
@@ -59,6 +60,7 @@ const Wave02 = ({
             backgroundSize: "55% auto",
             backgroundPosition: "bottom",
             transform: "translate3d(0, 0, 0)", // 開啟硬體加速
+            opacity: 0.8,
           }}
         />
         <motion.div
@@ -80,6 +82,7 @@ const Wave02 = ({
             backgroundPosition: "bottom",
             transform: "translate3d(0, 0, 0)", // 開啟硬體加速
             shapeRendering: "crispEdges", // 防止渲染問題
+            opacity: 0.8,
           }}
         />
         <motion.div
@@ -108,11 +111,11 @@ const Wave02 = ({
         <motion.div
           className="w-[100%] h-[100%] z-0 absolute bottom-4 "
           animate={{
-            translateX: ["-30%", "-0%"],
+            translateX: ["-60%", "-0%"],
             y: [0, 5, 0],
           }}
           transition={{
-            duration: transition.duration + 10,
+            duration: transition.duration + 3,
             repeat: transition.repeat,
             ease: transition.ease,
             times: transition.times,
@@ -123,7 +126,7 @@ const Wave02 = ({
             backgroundSize: "30% auto",
             backgroundPosition: "bottom",
             transform: "translate3d(0, 0, 0)", // 開啟硬體加速
-            opacity: 0.9,
+            opacity: 0.7,
             shapeRendering: "crispEdges", // 防止渲染問題
           }}
         />
