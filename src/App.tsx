@@ -209,7 +209,15 @@ function App() {
   //share this page url
   const sharePageUrl = () => {
     const url = window.location.href;
-    navigator.clipboard.writeText(url);
+
+    //web share api
+    if (navigator.share) {
+      navigator.share({
+        url: url,
+      });
+    } else {
+      console.log("不支援");
+    }
   };
 
   const handleLanguageChange = (lang: "jp" | "en" | "zh") => {
