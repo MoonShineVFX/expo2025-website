@@ -40,7 +40,7 @@ function App() {
   const [p1, setP1] = useState("");
   const [p2, setP2] = useState("");
   const [p3, setP3] = useState("");
-  const [language, setLanguage] = useState<"jp" | "en" | "zh" | null>(null);
+  const [language, setLanguage] = useState<"jp" | "en" | "ch" | null>(null);
   const [isVisible, setIsVisible] = useState(true);
   const [showContent, setShowContent] = useState(false);
   const languageArray = {
@@ -55,7 +55,7 @@ function App() {
       noData: "There are currently no itineraries.",
       dataDesc: "Your three itinerary recommendations.",
     },
-    zh: {
+    ch: {
       title: "非常感謝您\n讓我們有機會分享\n這個美麗的島嶼。",
       noData: "目前沒有任何行程",
       dataDesc: "您的3套行程推薦",
@@ -220,7 +220,7 @@ function App() {
     }
   };
 
-  const handleLanguageChange = (lang: "jp" | "en" | "zh") => {
+  const handleLanguageChange = (lang: "jp" | "en" | "ch") => {
     setLanguage(lang);
 
     setTimeout(() => {
@@ -273,9 +273,9 @@ function App() {
                 <motion.p
                   initial={{ opacity: 0, y: 10 }}
                   animate={{
-                    opacity: language === null ? 1 : language === "zh" ? 1 : 0,
+                    opacity: language === null ? 1 : language === "ch" ? 1 : 0,
                     y: 0,
-                    scale: language === null ? 1 : language === "zh" ? 1.2 : 1,
+                    scale: language === null ? 1 : language === "ch" ? 1.2 : 1,
                   }}
                   exit={{ opacity: 0, y: 0 }}
                   transition={{ duration: 0.5 }}
@@ -307,14 +307,14 @@ function App() {
                   EN
                 </button>
                 <button
-                  onClick={() => handleLanguageChange("zh")}
+                  onClick={() => handleLanguageChange("ch")}
                   className={`border border-white p-2 ${
-                    language === "zh"
+                    language === "ch"
                       ? "bg-white text-[#5AB9F1]"
                       : "text-white hover:bg-white hover:text-[#5AB9F1]"
                   }`}
                 >
-                  ZH
+                  CH
                 </button>
               </div>
               <div className="text-white text-2xl mt-2 tracking-widest "></div>
@@ -429,9 +429,14 @@ function App() {
                   <video
                     className="w-full h-full object-cover shadow-lg"
                     autoPlay
-                    loop
                     muted
                     playsInline
+                    onEnded={(e) => {
+                      const video = e.target as HTMLVideoElement;
+                      setTimeout(() => {
+                        video.play();
+                      }, 3000); // 3秒後重播
+                    }}
                   >
                     <source
                       src={`${videoDomain}/${item.videoname}`}
