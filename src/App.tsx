@@ -318,14 +318,14 @@ function App() {
       {/* 主要內容 */}
 
       {/*  Section */}
-      <section className="pb-[25%] min-h-screen flex flex-col items-center justify-center px-4 text-center bg-gradient-to-r from-[#76C6F3] via-[#5AB9F1] via-[#42ACE9] to-[#048BDB] relative">
+      <section className="pb-[50%] min-h-screen flex flex-col items-center justify-center px-4 text-center bg-gradient-to-r from-[#76C6F3] via-[#5AB9F1] via-[#42ACE9] to-[#048BDB] relative">
         <AnimatePresence>
           {showContent && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1.5 }}
-              className="flex flex-col items-center justify-center"
+              className="flex flex-col items-center justify-center "
             >
               <motion.div
                 className="flex flex-col items-start justify-center tracking-widest"
@@ -366,7 +366,7 @@ function App() {
       </section>
 
       {/* Intro Section */}
-      <section className="py-16  bg-white text-center relative z-0">
+      <section className="py-16  bg-white text-center relative z-0 -mt-[1px]">
         <div className="flex flex-col items-center justify-center my-15">
           {data.length > 0 ? (
             <h2 className="text-3xl md:text-4xl font-bold">
