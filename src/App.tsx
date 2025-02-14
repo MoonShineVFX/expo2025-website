@@ -227,12 +227,35 @@ function App() {
     }
   };
 
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      console.log("Scroll Y:", currentScrollY);
+      console.log("isVisible:", isVisible);
+      console.log("showContent:", showContent);
+
+      // 只在向上滾動且接近頂部時觸發
+      if (currentScrollY < 3 && currentScrollY < lastScrollY && !isVisible) {
+        setLanguage(null);
+        setIsVisible(true);
+        setShowContent(false);
+        console.log("觸發重置");
+      }
+
+      lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isVisible]);
+
   const handleLanguageChange = (lang: "jp" | "en" | "ch") => {
     setLanguage(lang);
 
     setTimeout(() => {
       setIsVisible(false);
-      // 當語言選擇區塊完全消失後，顯示主要內容
       setTimeout(() => {
         setShowContent(true);
       }, 1000);
@@ -246,7 +269,8 @@ function App() {
       <AnimatePresence>
         {isVisible && (
           <motion.div
-            initial={{ opacity: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1 }}
             className="fixed top-0 left-0 w-full h-screen bg-cyan-400/20 backdrop-blur-lg z-[999] flex flex-col items-center justify-center"
@@ -374,6 +398,7 @@ function App() {
             </motion.div>
           )}
         </AnimatePresence>
+
         <Wave02
           position={"absolute bottom-0 left-0"}
           sceneStyle={currentStyle}
@@ -381,7 +406,7 @@ function App() {
       </section>
 
       {/* Intro Section */}
-      <section className="py-16  bg-white text-center relative z-0 -mt-[1px]">
+      <section className="py-16  bg-white text-center relative z-0 -mt-[2px]">
         <div
           className="flex flex-col items-center justify-center my-15"
           data-aos="fade-up"
@@ -399,108 +424,109 @@ function App() {
           )}
         </div>
       </section>
+      <section className="relative pb-[50%] ">
+        {/* Itinerary Sections */}
+        {data.map((item, index) => {
+          const currentStyle =
+            styleArray.find((style) => style.name === item.category) ||
+            styleArray[0];
 
-      {/* Itinerary Sections */}
-      {data.map((item, index) => {
-        const currentStyle =
-          styleArray.find((style) => style.name === item.category) ||
-          styleArray[0];
+          console.log(currentStyle);
 
-        console.log(currentStyle);
+          return (
+            <section
+              key={item.number}
+              className="pb-[45%] max-w-full mx-auto relative -mt-[45%]"
+              style={{
+                background: currentStyle.gradient,
+              }}
+            >
+              <Wave06 position={"relative"} sceneStyle={currentStyle.style} />
 
-        return (
-          <section
-            key={item.number}
-            className="pb-[45%] max-w-full mx-auto relative -mt-[45%]"
-            style={{
-              background: currentStyle.gradient,
-            }}
-          >
-            <Wave06 position={"relative"} sceneStyle={currentStyle.style} />
-
-            <div className="w-10/12 mx-auto relative ">
-              <h2
-                className="text-2xl md:text-3xl font-bold mb- text-center flex flex-row items-center justify-between gap-2 px-[6px]"
-                data-aos="fade-down"
-                data-aos-duration="1300"
-                data-aos-delay="200"
-              >
-                <span>0{index + 1}</span>
-                <div className="text-right">
-                  {language === "jp"
-                    ? item.name_jp
-                    : language === "en"
-                    ? item.name_en
-                    : item.name_zh}
-                </div>
-              </h2>
-              <div
-                className="aspect-square w-full  p-[6px] mt-4"
-                style={{
-                  backgroundImage: `url('./images/video_bg.png')`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }}
-                data-aos="fade"
-                data-aos-duration="1300"
-                data-aos-delay="200"
-              >
-                {item.videoname && (
-                  <video
-                    className="w-full h-full object-cover shadow-lg"
-                    autoPlay
-                    muted
-                    playsInline
-                    onEnded={(e) => {
-                      const video = e.target as HTMLVideoElement;
-                      setTimeout(() => {
-                        video.play();
-                      }, 3000); // 3秒後重播
-                    }}
-                  >
-                    <source
-                      src={`${videoDomain}/${item.videoname}`}
-                      type="video/mp4"
-                    />
-                  </video>
-                )}
-              </div>
-              <div className="flex flex-row items-center justify-center gap-2 my-3">
-                <img
-                  src="./images/dlbtn.png"
-                  alt=""
-                  className="w-[35px]"
-                  onClick={() =>
-                    downloadVideo(
-                      `${videoDomain}/${item.videoname}`,
-                      item.videoname
-                    )
-                  }
+              <div className="w-10/12 mx-auto relative ">
+                <h2
+                  className="text-2xl md:text-3xl font-bold mb- text-center flex flex-row items-center justify-between gap-2 px-[6px]"
+                  data-aos="fade-down"
+                  data-aos-duration="1300"
+                  data-aos-delay="200"
+                >
+                  <span>0{index + 1}</span>
+                  <div className="text-right">
+                    {language === "jp"
+                      ? item.name_jp
+                      : language === "en"
+                      ? item.name_en
+                      : item.name_zh}
+                  </div>
+                </h2>
+                <div
+                  className="aspect-square w-full  p-[6px] mt-4"
+                  style={{
+                    backgroundImage: `url('./images/video_bg.png')`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
                   data-aos="fade"
                   data-aos-duration="1300"
                   data-aos-delay="200"
-                />
+                >
+                  {item.videoname && (
+                    <video
+                      className="w-full h-full object-cover shadow-lg"
+                      autoPlay
+                      muted
+                      playsInline
+                      onEnded={(e) => {
+                        const video = e.target as HTMLVideoElement;
+                        setTimeout(() => {
+                          video.play();
+                        }, 3000); // 3秒後重播
+                      }}
+                    >
+                      <source
+                        src={`${videoDomain}/${item.videoname}`}
+                        type="video/mp4"
+                      />
+                    </video>
+                  )}
+                </div>
+                <div className="flex flex-row items-center justify-center gap-2 my-3">
+                  <img
+                    src="./images/dlbtn.png"
+                    alt=""
+                    className="w-[35px]"
+                    onClick={() =>
+                      downloadVideo(
+                        `${videoDomain}/${item.videoname}`,
+                        item.videoname
+                      )
+                    }
+                    data-aos="fade"
+                    data-aos-duration="1300"
+                    data-aos-delay="200"
+                  />
+                </div>
+                <div
+                  className="prose max-w-none md:prose-lg mx-auto leading-8 text-[#1E1E1E] px-1"
+                  data-aos="fade-up"
+                  data-aos-duration="1300"
+                  data-aos-delay="200"
+                >
+                  {language === "jp"
+                    ? item.desc_jp
+                    : language === "en"
+                    ? item.desc_en
+                    : item.desc_zh}
+                </div>
               </div>
-              <div
-                className="prose max-w-none md:prose-lg mx-auto leading-8 text-[#1E1E1E] px-1"
-                data-aos="fade-up"
-                data-aos-duration="1300"
-                data-aos-delay="200"
-              >
-                {language === "jp"
-                  ? item.desc_jp
-                  : language === "en"
-                  ? item.desc_en
-                  : item.desc_zh}
-              </div>
-            </div>
-          </section>
-        );
-      })}
+            </section>
+          );
+        })}
+        <Wave05 position={"absolute bottom-0 left-0"} />
+      </section>
 
       {/* Footer */}
-      <footer className="pb-8 text-center   relative -mt-[30%]">
-        <Wave05 position={"relative"} />
+      <footer className=" text-center   relative -mt-[20%]">
         <div className="w-full  bg-gradient-to-t from-[#73C5F3] via-[#43ADE9]  to-[#0D90DD] h-[120vh] relative">
           <img
             src="./images/footer_top.png"

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-const Wave05 = ({ position }: { position: "relative" | "absolute" }) => {
+const Wave05 = ({ position }: { position: string }) => {
   const transition = {
     duration: 30,
     repeat: Infinity,
@@ -9,15 +9,13 @@ const Wave05 = ({ position }: { position: "relative" | "absolute" }) => {
   };
   return (
     <div
-      className={`w-full -bottom-[0] left-0 overflow-hidden  z-50 h-[180px] md:h-[1000px]   ${
-        position === "relative" ? "relative" : "absolute top-0 left-0"
-      }`}
+      className={`w-full -bottom-[0] left-0 overflow-hidden  z-50 h-[450px] md:h-[1000px]   ${position}`}
     >
-      <div className="w-[700%] h-[100%] z-0 absolute bottom-0  ">
+      <div className="w-[1200%] h-[100%] z-0 absolute bottom-0  ">
         <motion.div
           className="w-[100%] h-[100%] z-0 absolute -bottom-0 "
           animate={{
-            translateX: ["-50%", "-0%"],
+            translateX: ["-60%", "-0%"],
           }}
           transition={{
             duration: transition.duration,

@@ -23,7 +23,7 @@ const Wave06 = ({
         <motion.div
           className="w-[100%] h-[100%] z-0 absolute bottom-[20%] "
           animate={{
-            translateX: ["-50%", "-0%"],
+            translateX: ["-60%", "-0%"],
             y: [0, 15, 0],
           }}
           transition={{
@@ -45,7 +45,7 @@ const Wave06 = ({
         <motion.div
           className="w-[100%] h-[100%] z-0 absolute bottom-[15%]"
           animate={{
-            translateX: ["-50%", "-0%"],
+            translateX: ["-60%", "-0%"],
             y: [0, 15, 0],
           }}
           transition={{
@@ -67,7 +67,7 @@ const Wave06 = ({
         <motion.div
           className="w-[100%] h-[100%] z-0 absolute bottom-[10%] "
           animate={{
-            translateX: ["-50%", "-0%"],
+            translateX: ["-60%", "-0%"],
           }}
           transition={{
             duration: transition.duration - 8,
@@ -88,7 +88,7 @@ const Wave06 = ({
         <motion.div
           className="w-[100%] h-[100%] z-0 absolute -bottom-0 "
           animate={{
-            translateX: ["-50%", "-0%"],
+            translateX: ["-60%", "-0%"],
           }}
           transition={{
             duration: transition.duration,
