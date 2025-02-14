@@ -168,6 +168,42 @@ function App() {
 
     loadData();
   }, [searchParams]);
+  const downloadVideo = (url: string, name: string) => {
+    let corsanywhere = "https://mscors-anywhwere.kilokingw.workers.dev/?";
+    const fileName = name;
+
+    fetch(corsanywhere + url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.blob();
+      })
+      .then((blob) => {
+        const videoBlob = new Blob([blob], { type: "video/mp4" });
+        const downloadUrl = window.URL.createObjectURL(videoBlob);
+        const link = document.createElement("a");
+        link.href = downloadUrl;
+        link.setAttribute("download", fileName);
+
+        // Append to the document
+        document.body.appendChild(link);
+
+        // Trigger download
+        link.click();
+
+        // Clean up
+        link.parentNode!.removeChild(link);
+        window.URL.revokeObjectURL(downloadUrl);
+      })
+      .catch((err) => console.error("Error downloading video:", err));
+  };
+
+  //share this page url
+  const sharePageUrl = () => {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url);
+  };
 
   const handleLanguageChange = (lang: "jp" | "en" | "zh") => {
     setLanguage(lang);
@@ -348,12 +384,18 @@ function App() {
             <Wave06 position={"relative"} sceneStyle={currentStyle.style} />
 
             <div className="w-10/12 mx-auto relative ">
-              <h2 className="text-2xl md:text-3xl font-bold mb- text-center flex flex-row items-center justify-between gap-2">
+              <h2 className="text-2xl md:text-3xl font-bold mb- text-center flex flex-row items-center justify-between gap-2 px-[6px]">
                 <span>0{index + 1}</span>
-                <div>{item.name_zh}</div>
+                <div>
+                  {language === "jp"
+                    ? item.name_jp
+                    : language === "en"
+                    ? item.name_en
+                    : item.name_zh}
+                </div>
               </h2>
               <div
-                className="aspect-square w-full mb-8 p-2"
+                className="aspect-square w-full  p-[6px] mt-4"
                 style={{
                   backgroundImage: `url('./images/video_bg.png')`,
                   backgroundSize: "cover",
@@ -375,11 +417,25 @@ function App() {
                   </video>
                 )}
               </div>
-              <div className="flex flex-row items-center justify-center gap-2 my-4">
-                <img src="./images/dlbtn.png" alt="" className="w-[35px]" />
+              <div className="flex flex-row items-center justify-center gap-2 my-3">
+                <img
+                  src="./images/dlbtn.png"
+                  alt=""
+                  className="w-[35px]"
+                  onClick={() =>
+                    downloadVideo(
+                      `${videoDomain}/${item.videoname}`,
+                      item.videoname
+                    )
+                  }
+                />
               </div>
               <div className="prose max-w-none md:prose-lg mx-auto leading-8 text-[#1E1E1E] px-1">
-                {item.desc_zh}
+                {language === "jp"
+                  ? item.desc_jp
+                  : language === "en"
+                  ? item.desc_en
+                  : item.desc_zh}
               </div>
             </div>
           </section>
@@ -396,7 +452,12 @@ function App() {
             className="w-full  top-0 left-0"
           />
           <div className="flex flex-row items-center justify-center gap-2 mt-14">
-            <img src="./images/sharebtn.png" alt="" className="w-[35px]" />
+            <img
+              src="./images/sharebtn.png"
+              alt=""
+              className="w-[35px]"
+              onClick={sharePageUrl}
+            />
           </div>
         </div>
       </footer>
