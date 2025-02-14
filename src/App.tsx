@@ -234,7 +234,7 @@ function App() {
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1 }}
-            className="fixed top-0 left-0 w-full h-screen bg-cyan-400/20 backdrop-blur-sm z-[999] flex flex-col items-center justify-center"
+            className="fixed top-0 left-0 w-full h-screen bg-cyan-400/20 backdrop-blur-lg z-[999] flex flex-col items-center justify-center"
           >
             <div className="text-white text-xl flex flex-col gap-6 items-center justify-center">
               <AnimatePresence>
@@ -339,7 +339,7 @@ function App() {
               </motion.div>
 
               <motion.div
-                className="w-10/12 h-full items-center justify-center relative"
+                className="w-11/12 h-full items-center justify-center relative"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 1 }}
@@ -350,7 +350,7 @@ function App() {
                   green={parseInt(p2)}
                   blue={parseInt(p3)}
                 />
-                <div className="bottom-0 left-0 w-8/12 mx-auto h-full flex items-center justify-between">
+                <div className="ml-[25%] mr-[18%]  mx-auto h-full flex items-center justify-between">
                   <div className="text-white/80 text-sm">生命</div>
                   <div className="text-white/80 text-sm">自然</div>
                   <div className="text-white/80 text-sm">未來</div>
