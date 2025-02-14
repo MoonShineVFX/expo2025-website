@@ -7,7 +7,8 @@ import ChartLayers from "./components/ChartLayers";
 import Wave05 from "./components/Wave05";
 import Wave06 from "./components/Wave06";
 import { motion, AnimatePresence } from "framer-motion";
-
+import AOS from "aos";
+import "aos/dist/aos.css";
 interface ParsedSheetData {
   number: number;
   formattedNumber: string;
@@ -85,6 +86,12 @@ function App() {
       gradient: "linear-gradient(to top, #7CD8F0 5%, #D3E9FF00, #00000000)",
     },
   ];
+  useEffect(() => {
+    setTimeout(function () {
+      AOS.init({});
+    }, 100);
+    // AOS.refresh()
+  }, []);
   let videoDomain = "https://videos.expo2025-techworld-travel.com";
   // 解密 code 的函數
   const decryptCode = async (code: string): Promise<DecryptResponse> => {
@@ -375,7 +382,12 @@ function App() {
 
       {/* Intro Section */}
       <section className="py-16  bg-white text-center relative z-0 -mt-[1px]">
-        <div className="flex flex-col items-center justify-center my-15">
+        <div
+          className="flex flex-col items-center justify-center my-15"
+          data-aos="fade-up"
+          data-aos-duration="1300"
+          data-aos-delay="200"
+        >
           {data.length > 0 ? (
             <h2 className="text-3xl md:text-4xl font-bold">
               {language && languageArray[language].dataDesc}
@@ -407,7 +419,12 @@ function App() {
             <Wave06 position={"relative"} sceneStyle={currentStyle.style} />
 
             <div className="w-10/12 mx-auto relative ">
-              <h2 className="text-2xl md:text-3xl font-bold mb- text-center flex flex-row items-center justify-between gap-2 px-[6px]">
+              <h2
+                className="text-2xl md:text-3xl font-bold mb- text-center flex flex-row items-center justify-between gap-2 px-[6px]"
+                data-aos="fade-down"
+                data-aos-duration="1300"
+                data-aos-delay="200"
+              >
                 <span>0{index + 1}</span>
                 <div className="text-right">
                   {language === "jp"
@@ -424,6 +441,9 @@ function App() {
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}
+                data-aos="fade"
+                data-aos-duration="1300"
+                data-aos-delay="200"
               >
                 {item.videoname && (
                   <video
@@ -456,9 +476,17 @@ function App() {
                       item.videoname
                     )
                   }
+                  data-aos="fade"
+                  data-aos-duration="1300"
+                  data-aos-delay="200"
                 />
               </div>
-              <div className="prose max-w-none md:prose-lg mx-auto leading-8 text-[#1E1E1E] px-1">
+              <div
+                className="prose max-w-none md:prose-lg mx-auto leading-8 text-[#1E1E1E] px-1"
+                data-aos="fade-up"
+                data-aos-duration="1300"
+                data-aos-delay="200"
+              >
                 {language === "jp"
                   ? item.desc_jp
                   : language === "en"
@@ -479,7 +507,12 @@ function App() {
             alt="logo"
             className="w-full  top-0 left-0"
           />
-          <div className="flex flex-row items-center justify-center gap-2 mt-14">
+          <div
+            className="flex flex-row items-center justify-center gap-2 mt-14"
+            data-aos="fade"
+            data-aos-duration="1300"
+            data-aos-delay="200"
+          >
             <img
               src="./images/sharebtn.png"
               alt=""

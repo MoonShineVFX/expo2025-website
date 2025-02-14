@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.3",
+    "@types/aos": "^3.0.7",
+    "aos": "^2.3.4",
     "chart.js": "^4.4.7",
     "framer-motion": "^12.4.1",
     "react": "^19.0.0",

@@ -114,6 +114,9 @@ const Wave06 = ({
           src={`./images/${sceneStyle}icon01.png`}
           alt=""
           className="w-full max-w-full"
+          data-aos="fade"
+          data-aos-duration="1300"
+          data-aos-delay="200"
         />
       </div>
     </div>
