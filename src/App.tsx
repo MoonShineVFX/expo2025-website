@@ -46,13 +46,19 @@ function App() {
   const languageArray = {
     jp: {
       title: "この美しい島を\n共有する機会をくださり、\n感謝します。",
+      noData: "現在、予定されている行程はありません。",
+      dataDesc: "あなたの3つの旅程おすすめ。",
     },
     en: {
       title:
         "Thank you so much\nfor giving us the opportunity\nto share this beautiful island.",
+      noData: "There are currently no itineraries.",
+      dataDesc: "Your three itinerary recommendations.",
     },
     zh: {
       title: "非常感謝您\n讓我們有機會分享\n這個美麗的島嶼。",
+      noData: "目前沒有任何行程",
+      dataDesc: "您的3套行程推薦",
     },
   };
 
@@ -157,7 +163,8 @@ function App() {
           console.log("排序後的資料:", sortedData);
           setData(sortedData);
         } else {
-          setData(sheetData);
+          //顯示現在沒有行程
+          setData([]);
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
@@ -361,7 +368,15 @@ function App() {
       {/* Intro Section */}
       <section className="py-16  bg-white text-center relative z-0">
         <div className="flex flex-col items-center justify-center my-15">
-          <h2 className="text-3xl md:text-4xl font-bold">您的3套行程推薦</h2>
+          {data.length > 0 ? (
+            <h2 className="text-3xl md:text-4xl font-bold">
+              {language && languageArray[language].dataDesc}
+            </h2>
+          ) : (
+            <h2 className="text-3xl md:text-4xl font-bold">
+              {language && languageArray[language].noData}
+            </h2>
+          )}
         </div>
       </section>
 
@@ -386,7 +401,7 @@ function App() {
             <div className="w-10/12 mx-auto relative ">
               <h2 className="text-2xl md:text-3xl font-bold mb- text-center flex flex-row items-center justify-between gap-2 px-[6px]">
                 <span>0{index + 1}</span>
-                <div>
+                <div className="text-right">
                   {language === "jp"
                     ? item.name_jp
                     : language === "en"
