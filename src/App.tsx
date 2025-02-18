@@ -460,7 +460,7 @@ function App() {
                   </div>
                 </h2>
                 <div
-                  className="aspect-square w-full  p-[6px] mt-4"
+                  className="aspect-square w-full p-[6px] mt-4"
                   style={{
                     backgroundImage: `url('./images/video_bg.png')`,
                     backgroundSize: "cover",
@@ -476,11 +476,14 @@ function App() {
                       autoPlay
                       muted
                       playsInline
+                      webkit-playsinline="true" // 針對舊版 Safari
+                      controlsList="nodownload nofullscreen noremoteplayback" // 禁用控制項
+                      disablePictureInPicture // 禁用子母畫面
                       onEnded={(e) => {
                         const video = e.target as HTMLVideoElement;
                         setTimeout(() => {
                           video.play();
-                        }, 3000); // 3秒後重播
+                        }, 3000);
                       }}
                     >
                       <source
