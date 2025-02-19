@@ -1,8 +1,8 @@
 import "./App.css";
 import { useSearchParams } from "react-router-dom";
 import Wave02 from "./components/Wave02";
-import { useEffect, useState } from "react";
-import { fetchSheetData } from "./utils/fetchSheetData";
+import { useEffect, useState, useRef } from "react";
+import { fetchCategorySheetData, fetchSheetData } from "./utils/fetchSheetData";
 import ChartLayers from "./components/ChartLayers";
 import Wave05 from "./components/Wave05";
 import Wave06 from "./components/Wave06";
@@ -27,6 +27,14 @@ interface ParsedSheetData {
   etc: string;
 }
 
+interface CategoryData {
+  number: number;
+  category: string;
+  name_jp: string;
+  name_en: string;
+  name_zh: string;
+}
+
 interface DecryptResponse {
   v: string;
   p: string;
@@ -44,24 +52,35 @@ function App() {
   const [language, setLanguage] = useState<"jp" | "en" | "ch" | null>(null);
   const [isVisible, setIsVisible] = useState(true);
   const [showContent, setShowContent] = useState(false);
-  const languageArray = {
+  const [showTopMenu, setShowTopMenu] = useState(true);
+  const lastScrollY = useRef(0);
+  const [languageArray, setLanguageArray] = useState({
     jp: {
       title: "この美しい島を\n共有する機会をくださり、\n感謝します。",
       noData: "現在、予定されている行程はありません。",
       dataDesc: "あなたの3つの旅程おすすめ。",
+      webTitle: "EXPO 2025 TechWorld Travel",
+      webDesc: "探索台灣的美麗風景",
+      category: "",
     },
     en: {
       title:
         "Thank you so much\nfor giving us the opportunity\nto share this beautiful island.",
       noData: "There are currently no itineraries.",
       dataDesc: "Your three itinerary recommendations.",
+      webTitle: "EXPO 2025 TechWorld Travel",
+      webDesc: "Explore the beautiful scenery of Taiwan",
+      category: "",
     },
     ch: {
       title: "非常感謝您\n讓我們有機會分享\n這個美麗的島嶼。",
       noData: "目前沒有任何行程",
       dataDesc: "您的3套行程推薦",
+      webTitle: "EXPO 2025 TechWorld Travel",
+      webDesc: "探索台灣的美麗風景",
+      category: "",
     },
-  };
+  });
 
   const styleArray = [
     {
@@ -118,15 +137,18 @@ function App() {
       try {
         setLoading(true);
         const sheetData = await fetchSheetData();
+        const categoryData = await fetchCategorySheetData();
         const code = searchParams.get("code");
         let vParam = "";
         let pParam = "";
+        let cParam = "";
 
         if (code) {
           try {
             const decrypted = await decryptCode(code);
             vParam = decrypted.v;
             pParam = decrypted.p;
+            cParam = decrypted.c;
           } catch (error) {
             setError("解密失敗");
             return;
@@ -134,10 +156,26 @@ function App() {
         } else {
           vParam = searchParams.get("v") || "";
           pParam = searchParams.get("p") || "";
+          cParam = searchParams.get("c") || "";
         }
         const match = vParam.match(/s(\d)(\d{3})(\d{3})?(\d{3})?/);
         const matchP = pParam.match(/(\d{2})(\d{2})(\d{2})/);
+        const matchC = cParam;
+        if (matchC) {
+          const filterCategoryData = categoryData.filter(
+            (item: CategoryData) => item.number === Number(matchC)
+          );
+          console.log("分類:", filterCategoryData);
 
+          if (filterCategoryData.length > 0) {
+            setLanguageArray((prev) => ({
+              ...prev,
+              jp: { ...prev.jp, category: filterCategoryData[0].name_jp },
+              en: { ...prev.en, category: filterCategoryData[0].name_en },
+              ch: { ...prev.ch, category: filterCategoryData[0].name_zh },
+            }));
+          }
+        }
         if (matchP) {
           setP1(matchP[1]);
           setP2(matchP[2]);
@@ -214,42 +252,26 @@ function App() {
   };
 
   //share this page url
-  const sharePageUrl = () => {
+  const sharePageUrl = async () => {
     const url = window.location.href;
+    const title = language
+      ? languageArray[language].webTitle
+      : languageArray.en.webTitle;
+    const text = language
+      ? languageArray[language].webDesc
+      : languageArray.en.webDesc;
 
-    //web share api
-    if (navigator.share) {
-      navigator.share({
-        url: url,
-      });
-    } else {
-      console.log("不支援");
+    try {
+      if (navigator.share) {
+        await navigator.share({ title, text, url });
+      } else {
+        await navigator.clipboard.writeText(url);
+        alert("網址已複製到剪貼簿");
+      }
+    } catch (error) {
+      console.log("分享失敗:", error);
     }
   };
-
-  useEffect(() => {
-    let lastScrollY = window.scrollY;
-
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      console.log("Scroll Y:", currentScrollY);
-      console.log("isVisible:", isVisible);
-      console.log("showContent:", showContent);
-
-      // 只在向上滾動且接近頂部時觸發
-      if (currentScrollY < 3 && currentScrollY < lastScrollY && !isVisible) {
-        setLanguage(null);
-        setIsVisible(true);
-        setShowContent(false);
-        console.log("觸發重置");
-      }
-
-      lastScrollY = currentScrollY;
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [isVisible]);
 
   const handleLanguageChange = (lang: "jp" | "en" | "ch") => {
     setLanguage(lang);
@@ -261,6 +283,92 @@ function App() {
       }, 1000);
     }, 1500);
   };
+
+  // VideoPlayer 組件
+  const VideoPlayer = ({ videoUrl }: { videoUrl: string }) => {
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && videoRef.current) {
+              videoRef.current.play();
+            } else if (videoRef.current) {
+              videoRef.current.pause();
+              videoRef.current.currentTime = 0;
+            }
+          });
+        },
+        { threshold: 0.5 }
+      );
+
+      if (containerRef.current) {
+        observer.observe(containerRef.current);
+      }
+
+      return () => observer.disconnect();
+    }, []);
+
+    return (
+      <div
+        ref={containerRef}
+        className="aspect-square w-full p-[6px] mt-4"
+        style={{
+          backgroundImage: `url('./images/video_bg.png')`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+        data-aos="fade"
+        data-aos-duration="1300"
+        data-aos-delay="200"
+      >
+        <video
+          ref={videoRef}
+          className="w-full h-full object-cover shadow-lg"
+          muted
+          playsInline
+          webkit-playsinline="true"
+          controlsList="nodownload nofullscreen noremoteplayback"
+          disablePictureInPicture
+          onEnded={(e) => {
+            const video = e.target as HTMLVideoElement;
+            setTimeout(() => {
+              video.play();
+            }, 3000);
+          }}
+        >
+          <source src={videoUrl} type="video/mp4" />
+        </video>
+      </div>
+    );
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // 只在頁面頂部 300px 範圍內處理向上滾動顯示
+      if (currentScrollY < 350) {
+        if (currentScrollY < lastScrollY.current) {
+          // 向上滾動且在頂部範圍內
+          setShowTopMenu(true);
+        }
+      } else {
+        // 在 300px 以下時
+        if (currentScrollY > lastScrollY.current) {
+          // 向下滾動
+          setShowTopMenu(false);
+        }
+      }
+
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   if (loading) return <div>載入中...</div>;
   if (error) return <div>錯誤: {error}</div>;
@@ -352,6 +460,54 @@ function App() {
             </div>
           </motion.div>
         )}
+        d
+      </AnimatePresence>
+      <AnimatePresence>
+        {!isVisible && showTopMenu && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="fixed top-4 right-4 z-50"
+          >
+            <div className="flex flex-col items-center justify-center ">
+              <div className="flex flex-row gap-2 items-center justify-center">
+                <button
+                  onClick={() => handleLanguageChange("jp")}
+                  className={`border border-white p-2 ${
+                    language === "jp"
+                      ? "bg-white text-[#5AB9F1]"
+                      : "text-white hover:bg-white hover:text-[#5AB9F1]"
+                  }`}
+                >
+                  JP
+                </button>
+                <button
+                  onClick={() => handleLanguageChange("en")}
+                  className={`border border-white p-2 ${
+                    language === "en"
+                      ? "bg-white text-[#5AB9F1]"
+                      : "text-white hover:bg-white hover:text-[#5AB9F1]"
+                  }`}
+                >
+                  EN
+                </button>
+                <button
+                  onClick={() => handleLanguageChange("ch")}
+                  className={`border border-white p-2 ${
+                    language === "ch"
+                      ? "bg-white text-[#5AB9F1]"
+                      : "text-white hover:bg-white hover:text-[#5AB9F1]"
+                  }`}
+                >
+                  CH
+                </button>
+              </div>
+              <div className="text-white text-2xl mt-2 tracking-widest "></div>
+            </div>
+          </motion.div>
+        )}
       </AnimatePresence>
 
       {/* 主要內容 */}
@@ -384,11 +540,7 @@ function App() {
                 transition={{ duration: 1, delay: 1 }}
               >
                 <img src="./images/chart_main.svg" alt="logo" />
-                <ChartLayers
-                  pink={parseInt(p1)}
-                  green={parseInt(p2)}
-                  blue={parseInt(p3)}
-                />
+                <ChartLayers pink={p1} green={p2} blue={p3} />
                 <div className="ml-[25%] mr-[18%]  mx-auto h-full flex items-center justify-between">
                   <div className="text-white/80 text-sm">生命</div>
                   <div className="text-white/80 text-sm">自然</div>
@@ -415,7 +567,7 @@ function App() {
         >
           {data.length > 0 ? (
             <h2 className="text-3xl md:text-4xl font-bold">
-              {language && languageArray[language].dataDesc}
+              {language && languageArray[language].category}
             </h2>
           ) : (
             <h2 className="text-3xl md:text-4xl font-bold">
@@ -459,40 +611,9 @@ function App() {
                       : item.name_zh}
                   </div>
                 </h2>
-                <div
-                  className="aspect-square w-full p-[6px] mt-4"
-                  style={{
-                    backgroundImage: `url('./images/video_bg.png')`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                  }}
-                  data-aos="fade"
-                  data-aos-duration="1300"
-                  data-aos-delay="200"
-                >
-                  {item.videoname && (
-                    <video
-                      className="w-full h-full object-cover shadow-lg"
-                      autoPlay
-                      muted
-                      playsInline
-                      webkit-playsinline="true" // 針對舊版 Safari
-                      controlsList="nodownload nofullscreen noremoteplayback" // 禁用控制項
-                      disablePictureInPicture // 禁用子母畫面
-                      onEnded={(e) => {
-                        const video = e.target as HTMLVideoElement;
-                        setTimeout(() => {
-                          video.play();
-                        }, 3000);
-                      }}
-                    >
-                      <source
-                        src={`${videoDomain}/${item.videoname}`}
-                        type="video/mp4"
-                      />
-                    </video>
-                  )}
-                </div>
+                {item.videoname && (
+                  <VideoPlayer videoUrl={`${videoDomain}/${item.videoname}`} />
+                )}
                 <div className="flex flex-row items-center justify-center gap-2 my-3">
                   <img
                     src="./images/dlbtn.png"

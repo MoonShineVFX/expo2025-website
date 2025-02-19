@@ -2,15 +2,19 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 interface ChartLayersProps {
-  pink?: number;
-  green?: number;
-  blue?: number;
+  pink?: string;
+  green?: string;
+  blue?: string;
 }
 
-const ChartLayers = ({ pink = 0, green = 0, blue = 0 }: ChartLayersProps) => {
-  const [animatedPink, setAnimatedPink] = useState(0);
-  const [animatedGreen, setAnimatedGreen] = useState(0);
-  const [animatedBlue, setAnimatedBlue] = useState(0);
+const ChartLayers = ({
+  pink = "00",
+  green = "00",
+  blue = "00",
+}: ChartLayersProps) => {
+  const [animatedPink, setAnimatedPink] = useState("00");
+  const [animatedGreen, setAnimatedGreen] = useState("00");
+  const [animatedBlue, setAnimatedBlue] = useState("00");
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -22,13 +26,21 @@ const ChartLayers = ({ pink = 0, green = 0, blue = 0 }: ChartLayersProps) => {
     return () => clearTimeout(timer);
   }, [pink, green, blue]);
 
-  const generateLayers = (color: string, value: number) => {
+  const generateLayers = (color: string, value: string) => {
     const layers = [];
     const validNumbers = [0, 10, 20, 30, 40, 50, 60, 70, 90, 100];
 
+    // 將字串轉為數字並四捨五入到最接近的 validNumbers 值
+    const numValue = parseInt(value);
+    const roundedValue = validNumbers.reduce((prev, curr) => {
+      return Math.abs(curr - numValue) < Math.abs(prev - numValue)
+        ? curr
+        : prev;
+    });
+
     for (let i = 0; i < validNumbers.length; i++) {
       const num = validNumbers[i];
-      if (num <= value) {
+      if (num <= roundedValue) {
         layers.push(
           <motion.img
             key={`${color}_${num}`}

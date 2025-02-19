@@ -16,14 +16,25 @@ interface ParsedSheetData {
   formattedNumber: string;
 }
 
+interface CategoryData {
+  number: number;
+  category: string;
+  name_jp: string;
+  name_en: string;
+  name_zh: string;
+  formattedNumber: string;
+}
+
 // 添加一個補零的輔助函數
 const padNumber = (num: number): string => {
   return num.toString().padStart(3, "0");
 };
 
-export async function fetchSheetData() {
+export async function fetchSheetData(sheetName: string = "景點文字") {
   const sheetId = "1mKCox7dZSBqQ5izSSFSWf7ZwX7UVbagDTevJe_zd5xY";
-  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json`;
+  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(
+    sheetName
+  )}`;
 
   try {
     const response = await fetch(url);
@@ -71,7 +82,59 @@ export async function fetchSheetData() {
       return parsedRow as ParsedSheetData & { formattedNumber: string };
     });
 
-    console.log("Parsed Sheet Data:", JSON.stringify(rows, null, 2));
+    // console.log("Parsed Sheet Data:", JSON.stringify(rows, null, 2));
+    return rows;
+  } catch (error) {
+    console.error("Error fetching sheet data:", error);
+    return [];
+  }
+}
+
+export async function fetchCategorySheetData(
+  sheetName: string = "XX之旅_另一個"
+) {
+  const sheetId = "1mKCox7dZSBqQ5izSSFSWf7ZwX7UVbagDTevJe_zd5xY";
+  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(
+    sheetName
+  )}`;
+
+  try {
+    const response = await fetch(url);
+    const text = await response.text();
+    // 移除 Google 的 JSON 包裝
+    const jsonString = text.substring(47).slice(0, -2);
+    const json = JSON.parse(jsonString);
+
+    // 欄位對應表
+    const fieldMapping: { [key: string]: keyof CategoryData } = {
+      編號: "number",
+      類別: "category",
+      "名稱(日)": "name_jp",
+      "名稱(英)": "name_en",
+      "名稱(中)": "name_zh",
+    };
+
+    // 轉換欄位名稱並解析資料
+    const headers = json.table.cols.map((col: { label: string }) => col.label);
+    const rows = json.table.rows.map((row: { c: Array<{ v: any }> }) => {
+      const parsedRow: Partial<CategoryData> = {};
+      headers.forEach((header: string, index: number) => {
+        const englishField = fieldMapping[header];
+        if (englishField) {
+          const value = row.c[index]?.v ?? "";
+          // 特別處理編號欄位，轉為數字並補零
+          if (englishField === "number") {
+            const numValue = Number(value);
+            parsedRow[englishField] = numValue; // 保持原始數字型別
+          } else {
+            parsedRow[englishField] = value;
+          }
+        }
+      });
+      return parsedRow as ParsedSheetData & { formattedNumber: string };
+    });
+
+    // console.log("Parsed Sheet Data:", JSON.stringify(rows, null, 2));
     return rows;
   } catch (error) {
     console.error("Error fetching sheet data:", error);
