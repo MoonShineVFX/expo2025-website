@@ -30,13 +30,31 @@ const ChartLayers = ({
     const layers = [];
     const validNumbers = [0, 10, 20, 30, 40, 50, 60, 70, 90, 100];
 
-    // 將字串轉為數字並四捨五入到最接近的 validNumbers 值
+    // 加入數值解析的日誌
+    console.log(`${color} 原始值:`, value);
     const numValue = parseInt(value);
+    console.log(`${color} 解析後:`, numValue);
+
     const roundedValue = validNumbers.reduce((prev, curr) => {
       return Math.abs(curr - numValue) < Math.abs(prev - numValue)
         ? curr
         : prev;
     });
+    console.log(`${color} 四捨五入到最近的有效值:`, roundedValue);
+
+    // 定義每個數值對應的深度
+    const depthMap: { [key: number]: number } = {
+      0: 0,
+      10: -1,
+      20: -2,
+      30: -3,
+      40: -4,
+      50: -5,
+      60: 1,
+      70: 2,
+      90: 3,
+      100: 4,
+    };
 
     for (let i = 0; i < validNumbers.length; i++) {
       const num = validNumbers[i];
@@ -48,13 +66,14 @@ const ChartLayers = ({
             animate={{ opacity: 1 }}
             transition={{
               duration: 0.3,
-              delay: i * 0.2, // 每層延遲 0.2 秒
+              delay: i * 0.2,
             }}
             src={`./images/charts/chart_${color}_${num
               .toString()
               .padStart(2, "0")}.png`}
             alt={`${color} ${num}`}
             className="absolute bottom-0 left-0 w-full"
+            style={{ zIndex: depthMap[num] }} // 使用映射的深度值
           />
         );
       }
@@ -68,7 +87,7 @@ const ChartLayers = ({
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
-      <div className="flex flex-row  absolute bottom-[6.2%] left-[6%] w-[94.5%] h-full ">
+      <div className="flex flex-row  absolute bottom-[6.2%] left-[6%] w-[94.5%] h-full z-0 ">
         {/* Pink Layers */}
         <div className="absolute bottom-0 left-[0%] w-full">
           {generateLayers("pink", animatedPink)}
