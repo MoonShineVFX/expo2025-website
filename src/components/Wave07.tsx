@@ -1,51 +1,50 @@
 import { motion } from "framer-motion";
 
-const Wave06 = ({
+const Wave07 = ({
   position,
   sceneStyle,
 }: {
-  position: "relative" | "absolute";
+  position: string;
   sceneStyle: string;
 }) => {
   const transition = {
-    duration: 30,
+    duration: 28,
     repeat: Infinity,
     ease: [0.55, 0.5, 0.45, 0.5],
     times: [0, 1],
   };
   return (
     <div
-      className={`w-full -bottom-[0] left-0 overflow-hidden  z-50 h-[450px] md:h-[1000px]  ${
-        position === "relative" ? "relative" : "absolute bottom-0 left-0"
-      }`}
+      className={`w-full  overflow-hidden  z-0 h-[320px]  md:h-[1000px] ${position}`}
     >
-      <div className="w-[1200%] h-[100%] z-0 absolute bottom-0  ">
+      <div className="w-[500%] h-[100%] z-0 absolute bottom-0  ">
         <motion.div
-          className="w-[100%] h-[100%] z-0 absolute bottom-[20%] "
+          className="w-[100%] h-[100%] z-0 absolute bottom-[24%]  "
           animate={{
-            translateX: ["-60%", "-0%"],
+            translateX: ["-70%", "-0%"],
             y: [0, 15, 0],
           }}
           transition={{
-            duration: transition.duration - 14,
+            duration: transition.duration - 10,
             repeat: transition.repeat,
             ease: transition.ease,
             times: transition.times,
             delay: -1,
           }}
           style={{
-            backgroundImage: "url('./images/wave4_04.svg')",
+            backgroundImage: "url('./images/hwave_v2_04.svg')",
             backgroundRepeat: "repeat-x",
-            backgroundSize: "15% auto",
+            backgroundSize: "35% auto",
             backgroundPosition: "bottom",
             transform: "translate3d(0, 0, 0)", // 開啟硬體加速
-            opacity: 0.6,
+            backfaceVisibility: "hidden", // 防止渲染問題
+            opacity: 0.8,
           }}
         />
         <motion.div
-          className="w-[100%] h-[100%] z-0 absolute bottom-[15%]"
+          className="w-[100%] h-[100%] z-0 absolute bottom-[17%]"
           animate={{
-            translateX: ["-60%", "-0%"],
+            translateX: ["-70%", "-0%"],
             y: [0, 15, 0],
           }}
           transition={{
@@ -56,39 +55,40 @@ const Wave06 = ({
             delay: -2,
           }}
           style={{
-            backgroundImage: "url('./images/wave4_03.svg')",
+            backgroundImage: "url('./images/hwave_v2_03.svg')",
             backgroundRepeat: "repeat-x",
-            backgroundSize: "15% auto",
+            backgroundSize: "35% auto",
             backgroundPosition: "bottom",
             transform: "translate3d(0, 0, 0)", // 開啟硬體加速
-            opacity: 0.6,
+            opacity: 0.8,
           }}
         />
         <motion.div
           className="w-[100%] h-[100%] z-0 absolute bottom-[10%] "
           animate={{
-            translateX: ["-60%", "-0%"],
+            translateX: ["-70%", "-0%"],
           }}
           transition={{
-            duration: transition.duration - 8,
+            duration: transition.duration - 5,
             repeat: transition.repeat,
             ease: transition.ease,
             times: transition.times,
             delay: -3,
           }}
           style={{
-            backgroundImage: "url('./images/wave4_02.svg')",
+            backgroundImage: "url('./images/hwave_v2_02.svg')",
             backgroundRepeat: "repeat-x",
-            backgroundSize: "15% auto",
+            backgroundSize: "35% auto",
             backgroundPosition: "bottom",
             transform: "translate3d(0, 0, 0)", // 開啟硬體加速
-            opacity: 0.7,
+            shapeRendering: "crispEdges", // 防止渲染問題
+            opacity: 0.8,
           }}
         />
         <motion.div
-          className="w-[100%] h-[100%] z-0 absolute -bottom-0 "
+          className="w-[100%] h-[100%] z-0 absolute -bottom-0"
           animate={{
-            translateX: ["-60%", "-0%"],
+            translateX: ["-70%", "0%"],
           }}
           transition={{
             duration: transition.duration,
@@ -98,52 +98,41 @@ const Wave06 = ({
             delay: -4,
           }}
           style={{
-            backgroundImage: `url('./images/${sceneStyle}wave4_01.svg')`,
+            backgroundImage: `url('./images/hwave_v2_01.svg')`,
             backgroundRepeat: "repeat-x",
-            backgroundSize: "15% auto",
-            backgroundPosition: "bottom ",
-            imageRendering: "pixelated", // 改善圖片渲染
-            backfaceVisibility: "hidden", // 防止渲染問題
+            backgroundSize: "35% auto",
+            backgroundPosition: "bottom",
             transform: "translate3d(0, 0, 0)", // 開啟硬體加速
-            opacity: 1,
+            backfaceVisibility: "hidden", // 防止渲染問題
+            willChange: "transform", // 優化動畫性能
+            imageRendering: "auto", // 改回預設渲染
           }}
         />
         <motion.div
-          className="w-[100%] h-[100%] z-0 absolute bottom-[15%] "
+          className="w-[100%] h-[100%] z-10 absolute bottom-[50%] "
           animate={{
-            translateX: ["-60%", "-0%"],
+            translateX: ["-70%", "-0%"],
+            y: [0, 5, 0],
           }}
           transition={{
-            duration: transition.duration - 5,
+            duration: transition.duration + 3,
             repeat: transition.repeat,
             ease: transition.ease,
             times: transition.times,
-            delay: -4,
           }}
           style={{
-            backgroundImage: `url('./images/${sceneStyle}title_wave.svg')`,
+            backgroundImage: "url('./images/hwave_v2_05.svg')",
             backgroundRepeat: "repeat-x",
-            backgroundSize: "15% auto",
-            backgroundPosition: "bottom ",
-            imageRendering: "pixelated", // 改善圖片渲染
-            backfaceVisibility: "hidden", // 防止渲染問題
+            backgroundSize: "35% auto",
+            backgroundPosition: "bottom",
             transform: "translate3d(0, 0, 0)", // 開啟硬體加速
-            opacity: 1,
+            opacity: 0.7,
+            shapeRendering: "crispEdges", // 防止渲染問題
           }}
-        />
-      </div>
-      <div className="absolute bottom-[25%] left-0 w-[30%] z-10 ">
-        <img
-          src={`./images/${sceneStyle}icon01.png`}
-          alt=""
-          className="w-full max-w-full"
-          data-aos="fade"
-          data-aos-duration="1300"
-          data-aos-delay="200"
         />
       </div>
     </div>
   );
 };
 
-export default Wave06;
+export default Wave07;

@@ -68,9 +68,9 @@ const ChartLayers = ({
               duration: 0.3,
               delay: i * 0.2,
             }}
-            src={`./images/charts/chart_${color}_${num
+            src={`./images/charts2/chart_${color}_${num
               .toString()
-              .padStart(2, "0")}.png`}
+              .padStart(2, "0")}.svg`}
             alt={`${color} ${num}`}
             className="absolute bottom-0 left-0 w-full"
             style={{ zIndex: depthMap[num] }} // 使用映射的深度值
@@ -87,7 +87,7 @@ const ChartLayers = ({
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
-      <div className="flex flex-row  absolute bottom-[6.2%] left-[6%] w-[94.5%] h-full z-0 ">
+      <div className="flex flex-row  absolute bottom-[0%] left-[0%] w-[100%] z-0 ">
         {/* Pink Layers */}
         <div className="absolute bottom-0 left-[0%] w-full">
           {generateLayers("pink", animatedPink)}

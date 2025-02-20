@@ -90,13 +90,9 @@ export async function fetchSheetData(sheetName: string = "景點文字") {
   }
 }
 
-export async function fetchCategorySheetData(
-  sheetName: string = "XX之旅_另一個"
-) {
-  const sheetId = "1mKCox7dZSBqQ5izSSFSWf7ZwX7UVbagDTevJe_zd5xY";
-  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(
-    sheetName
-  )}`;
+export async function fetchCategorySheetData() {
+  const sheetId = "1npqgrRFUp-TkZetNfYOh3jqpY7ssus-3eImAkUbZCuE";
+  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json}`;
 
   try {
     const response = await fetch(url);

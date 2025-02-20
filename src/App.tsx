@@ -1,6 +1,5 @@
 import "./App.css";
 import { useSearchParams } from "react-router-dom";
-import Wave02 from "./components/Wave02";
 import { useEffect, useState, useRef } from "react";
 import { fetchCategorySheetData, fetchSheetData } from "./utils/fetchSheetData";
 import ChartLayers from "./components/ChartLayers";
@@ -9,6 +8,8 @@ import Wave06 from "./components/Wave06";
 import { motion, AnimatePresence } from "framer-motion";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import Wave07 from "./components/Wave07";
+import Wave08 from "./components/Wave08";
 interface ParsedSheetData {
   number: number;
   formattedNumber: string;
@@ -88,21 +89,24 @@ function App() {
       style: "s1",
       name: "自然",
       color: "#4FCAD8",
-      gradient: "linear-gradient(to top, #4FCAD8 5%, #D6F4FF00, #D6F4FF00)",
+      gradient:
+        "linear-gradient(0deg, #4FCAD8 0%, #f3feff 12%, #ffffff00 100%)",
     },
     {
       id: 2,
       style: "s2",
       name: "生命",
       color: "#FFD1E4",
-      gradient: "linear-gradient(to top, #FFD1E4 5%,#F7DDFA00, #00000000)",
+      gradient:
+        "linear-gradient(0deg, #ffd1e4 0%, #fff4f9 12%, #ffffff00 100%)",
     },
     {
       id: 3,
       style: "s3",
       name: "未來",
       color: "#7CD8F0",
-      gradient: "linear-gradient(to top, #7CD8F0 5%, #D3E9FF00, #00000000)",
+      gradient:
+        "linear-gradient(0deg, #7CD8F0 0%, #7CD8F050 12%, #ffffff00 100%)",
     },
   ];
   useEffect(() => {
@@ -370,6 +374,31 @@ function App() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (isVisible) {
+      // 禁用滾動
+      document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.width = "100%";
+      document.body.style.top = `-${window.scrollY}px`;
+    } else {
+      // 恢復滾動
+      const scrollY = document.body.style.top;
+      document.body.style.overflow = "unset";
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.body.style.top = "";
+      window.scrollTo(0, parseInt(scrollY || "0") * -1);
+    }
+
+    return () => {
+      document.body.style.overflow = "unset";
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.body.style.top = "";
+    };
+  }, [isVisible]);
+
   if (loading) return <div>載入中...</div>;
   if (error) return <div>錯誤: {error}</div>;
   return (
@@ -453,14 +482,13 @@ function App() {
                       : "text-white hover:bg-white hover:text-[#5AB9F1]"
                   }`}
                 >
-                  CH
+                  ZH
                 </button>
               </div>
               <div className="text-white text-2xl mt-2 tracking-widest "></div>
             </div>
           </motion.div>
         )}
-        d
       </AnimatePresence>
       <AnimatePresence>
         {!isVisible && showTopMenu && (
@@ -501,7 +529,7 @@ function App() {
                       : "text-white hover:bg-white hover:text-[#5AB9F1]"
                   }`}
                 >
-                  CH
+                  ZH
                 </button>
               </div>
               <div className="text-white text-2xl mt-2 tracking-widest "></div>
@@ -513,7 +541,7 @@ function App() {
       {/* 主要內容 */}
 
       {/*  Section */}
-      <section className="pb-[50%] min-h-screen flex flex-col items-center justify-center px-4 text-center bg-gradient-to-r from-[#76C6F3] via-[#5AB9F1] via-[#42ACE9] to-[#048BDB] relative">
+      <section className="pb-[25%] min-h-screen flex flex-col items-center justify-center px-4 text-center bg-gradient-to-r from-[#76C6F3] via-[#5AB9F1] via-[#42ACE9] to-[#048BDB] relative">
         <AnimatePresence>
           {showContent && (
             <motion.div
@@ -534,14 +562,17 @@ function App() {
               </motion.div>
 
               <motion.div
-                className="w-11/12 h-full items-center justify-center relative"
+                className="w-12/12 h-full items-center justify-center relative"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 1 }}
               >
-                <img src="./images/chart_main.svg" alt="logo" />
-                <ChartLayers pink={p1} green={p2} blue={p3} />
-                <div className="ml-[25%] mr-[18%]  mx-auto h-full flex items-center justify-between">
+                <div className="w-10/12 mx-auto h-full relative my-[8%]">
+                  <img src="./images/charts2/bg01.svg" alt="logo" />
+                  <ChartLayers pink={p1} green={p2} blue={p3} />
+                </div>
+
+                <div className="ml-[24%] mr-[23%]  mx-auto h-full flex items-center justify-between">
                   <div className="text-white/80 text-sm">生命</div>
                   <div className="text-white/80 text-sm">自然</div>
                   <div className="text-white/80 text-sm">未來</div>
@@ -551,16 +582,16 @@ function App() {
           )}
         </AnimatePresence>
 
-        <Wave02
-          position={"absolute bottom-0 left-0"}
+        <Wave07
+          position={"absolute -bottom-[15%] left-0"}
           sceneStyle={currentStyle}
         />
       </section>
 
       {/* Intro Section */}
-      <section className="py-16  bg-white text-center relative z-0 -mt-[2px]">
+      <section className="py-[30%] bg-white text-center relative  -mt-[2px] z-10">
         <div
-          className="flex flex-col items-center justify-center my-15"
+          className="flex flex-col items-center justify-center mb-15 -mt-[5%] "
           data-aos="fade-up"
           data-aos-duration="1300"
           data-aos-delay="200"
@@ -594,6 +625,10 @@ function App() {
               }}
             >
               <Wave06 position={"relative"} sceneStyle={currentStyle.style} />
+              <Wave08
+                position={"absolute top-[50%] left-0"}
+                sceneStyle={currentStyle.style}
+              />
 
               <div className="w-10/12 mx-auto relative ">
                 <h2
