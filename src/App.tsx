@@ -39,6 +39,7 @@ interface CategoryData {
 interface DecryptResponse {
   v: string;
   p: string;
+  c: string;
 }
 
 function App() {
@@ -192,8 +193,8 @@ function App() {
 
         if (match) {
           const numbers = [match[2], match[3], match[4]].filter(Boolean);
-          console.log("要過濾的編號:", numbers);
           setCurrentStyle("s" + match[1]);
+          console.log("要過濾的編號:", currentStyle);
 
           // 先過濾出符合的資料
           const filteredData = sheetData.filter((item: ParsedSheetData) =>
@@ -582,10 +583,7 @@ function App() {
           )}
         </AnimatePresence>
 
-        <Wave07
-          position={"absolute -bottom-[15%] left-0"}
-          sceneStyle={currentStyle}
-        />
+        <Wave07 position={"absolute -bottom-[15%] left-0"} />
       </section>
 
       {/* Intro Section */}

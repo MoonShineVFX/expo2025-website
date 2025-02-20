@@ -1,12 +1,6 @@
 import { motion } from "framer-motion";
 
-const Wave07 = ({
-  position,
-  sceneStyle,
-}: {
-  position: string;
-  sceneStyle: string;
-}) => {
+const Wave07 = ({ position }: { position: string }) => {
   const transition = {
     duration: 28,
     repeat: Infinity,
