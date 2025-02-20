@@ -28,7 +28,7 @@ const ChartLayers = ({
 
   const generateLayers = (color: string, value: string) => {
     const layers = [];
-    const validNumbers = [0, 10, 20, 30, 40, 50, 60, 70, 90, 100];
+    const validNumbers = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
 
     // 加入數值解析的日誌
     console.log(`${color} 原始值:`, value);
@@ -52,8 +52,9 @@ const ChartLayers = ({
       50: -5,
       60: 1,
       70: 2,
-      90: 3,
-      100: 4,
+      80: 3,
+      90: 4,
+      100: 5,
     };
 
     for (let i = 0; i < validNumbers.length; i++) {
@@ -99,7 +100,7 @@ const ChartLayers = ({
         </div>
 
         {/* Blue Layers */}
-        <div className="absolute bottom-0 left-[0%] w-full">
+        <div className="absolute bottom-0 right-[0%] w-full">
           {generateLayers("blue", animatedBlue)}
         </div>
       </div>
