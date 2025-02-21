@@ -404,7 +404,28 @@ function App() {
     };
   }, [isVisible]);
 
-  if (loading) return <div>載入中...</div>;
+  if (loading)
+    return (
+      <AnimatePresence>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1 }}
+        >
+          <div
+            className="w-full text-white flex items-center justify-center  h-[100vh] relative"
+            style={{
+              background: "linear-gradient(-45deg, #73C5F3, #43ADE9, #0D90DD)",
+              backgroundSize: "400% 400%",
+              animation: "gradient 8s ease infinite",
+            }}
+          >
+            Loading...
+          </div>
+        </motion.div>
+      </AnimatePresence>
+    );
   if (error) return <div>錯誤: {error}</div>;
   return (
     <div className="min-h-screen relative">
