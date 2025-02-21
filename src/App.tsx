@@ -354,14 +354,18 @@ function App() {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      // 只在頁面頂部 300px 範圍內處理向上滾動顯示
+      // 只在頁面頂部 350px 範圍內處理向上滾動顯示
       if (currentScrollY < 350) {
         if (currentScrollY < lastScrollY.current) {
           // 向上滾動且在頂部範圍內
           setShowTopMenu(true);
         }
+        // 新增：當向下滾動超過 100px 就隱藏
+        if (currentScrollY > 40 && currentScrollY > lastScrollY.current) {
+          setShowTopMenu(false);
+        }
       } else {
-        // 在 300px 以下時
+        // 在 350px 以下時
         if (currentScrollY > lastScrollY.current) {
           // 向下滾動
           setShowTopMenu(false);
@@ -457,7 +461,7 @@ function App() {
               <div className="flex flex-row gap-4 items-center justify-center">
                 <button
                   onClick={() => handleLanguageChange("jp")}
-                  className={`border border-white p-2 ${
+                  className={`border border-white w-10 h-10 flex items-center justify-center ${
                     language === "jp"
                       ? "bg-white text-[#5AB9F1]"
                       : "text-white hover:bg-white hover:text-[#5AB9F1]"
@@ -467,7 +471,7 @@ function App() {
                 </button>
                 <button
                   onClick={() => handleLanguageChange("en")}
-                  className={`border border-white p-2 ${
+                  className={`border border-white w-10 h-10 flex items-center justify-center ${
                     language === "en"
                       ? "bg-white text-[#5AB9F1]"
                       : "text-white hover:bg-white hover:text-[#5AB9F1]"
@@ -477,7 +481,7 @@ function App() {
                 </button>
                 <button
                   onClick={() => handleLanguageChange("ch")}
-                  className={`border border-white p-2 ${
+                  className={`border border-white w-10 h-10 flex items-center justify-center ${
                     language === "ch"
                       ? "bg-white text-[#5AB9F1]"
                       : "text-white hover:bg-white hover:text-[#5AB9F1]"
@@ -501,10 +505,10 @@ function App() {
             className="fixed top-4 right-4 z-50"
           >
             <div className="flex flex-col items-center justify-center ">
-              <div className="flex flex-row gap-2 items-center justify-center">
+              <div className="flex flex-row gap-4 items-center justify-center">
                 <button
                   onClick={() => handleLanguageChange("jp")}
-                  className={`border border-white p-2 ${
+                  className={`border border-white w-10 h-10 flex items-center justify-center ${
                     language === "jp"
                       ? "bg-white text-[#5AB9F1]"
                       : "text-white hover:bg-white hover:text-[#5AB9F1]"
@@ -514,7 +518,7 @@ function App() {
                 </button>
                 <button
                   onClick={() => handleLanguageChange("en")}
-                  className={`border border-white p-2 ${
+                  className={`border border-white w-10 h-10 flex items-center justify-center ${
                     language === "en"
                       ? "bg-white text-[#5AB9F1]"
                       : "text-white hover:bg-white hover:text-[#5AB9F1]"
@@ -524,7 +528,7 @@ function App() {
                 </button>
                 <button
                   onClick={() => handleLanguageChange("ch")}
-                  className={`border border-white p-2 ${
+                  className={`border border-white w-10 h-10 flex items-center justify-center ${
                     language === "ch"
                       ? "bg-white text-[#5AB9F1]"
                       : "text-white hover:bg-white hover:text-[#5AB9F1]"
