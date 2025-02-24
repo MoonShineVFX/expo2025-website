@@ -15,7 +15,7 @@ const Wave07 = ({ position }: { position: string }) => {
         <motion.div
           className="w-[100%] h-[100%] z-0 absolute bottom-[24%]  "
           animate={{
-            translateX: ["-60%", "-0%"],
+            translateX: ["-1400px", "0%"],
             y: [0, 15, 0],
           }}
           transition={{
@@ -28,7 +28,7 @@ const Wave07 = ({ position }: { position: string }) => {
           style={{
             backgroundImage: "url('./images/hwave_v2_04.svg')",
             backgroundRepeat: "repeat-x",
-            backgroundSize: "30% auto",
+            backgroundSize: "700px auto",
             backgroundPosition: "bottom",
             transform: "translate3d(0, 0, 0)", // 開啟硬體加速
             backfaceVisibility: "hidden", // 防止渲染問題
@@ -38,7 +38,7 @@ const Wave07 = ({ position }: { position: string }) => {
         <motion.div
           className="w-[100%] h-[100%] z-0 absolute bottom-[17%]"
           animate={{
-            translateX: ["-60%", "-0%"],
+            translateX: ["-1400px", "0%"],
             y: [0, 15, 0],
           }}
           transition={{
@@ -51,7 +51,7 @@ const Wave07 = ({ position }: { position: string }) => {
           style={{
             backgroundImage: "url('./images/hwave_v2_03.svg')",
             backgroundRepeat: "repeat-x",
-            backgroundSize: "30% auto",
+            backgroundSize: "700px auto",
             backgroundPosition: "bottom",
             transform: "translate3d(0, 0, 0)", // 開啟硬體加速
             opacity: 0.8,
@@ -60,7 +60,7 @@ const Wave07 = ({ position }: { position: string }) => {
         <motion.div
           className="w-[100%] h-[100%] z-0 absolute bottom-[10%] "
           animate={{
-            translateX: ["-60%", "-0%"],
+            translateX: ["-1400px", "0%"],
           }}
           transition={{
             duration: transition.duration - 5,
@@ -72,7 +72,7 @@ const Wave07 = ({ position }: { position: string }) => {
           style={{
             backgroundImage: "url('./images/hwave_v2_02.svg')",
             backgroundRepeat: "repeat-x",
-            backgroundSize: "30% auto",
+            backgroundSize: "700px auto",
             backgroundPosition: "bottom",
             transform: "translate3d(0, 0, 0)", // 開啟硬體加速
             shapeRendering: "crispEdges", // 防止渲染問題
@@ -82,7 +82,7 @@ const Wave07 = ({ position }: { position: string }) => {
         <motion.div
           className="w-[100%] h-[100%] z-0 absolute -bottom-0"
           animate={{
-            translateX: ["-60%", "0%"],
+            translateX: ["-1400px", "0%"],
           }}
           transition={{
             duration: transition.duration,
@@ -94,7 +94,7 @@ const Wave07 = ({ position }: { position: string }) => {
           style={{
             backgroundImage: `url('./images/hwave_v2_01.svg')`,
             backgroundRepeat: "repeat-x",
-            backgroundSize: "30% auto",
+            backgroundSize: "700px auto",
             backgroundPosition: "bottom",
             transform: "translate3d(0, 0, 0)", // 開啟硬體加速
             backfaceVisibility: "hidden", // 防止渲染問題
@@ -105,7 +105,7 @@ const Wave07 = ({ position }: { position: string }) => {
         <motion.div
           className="w-[100%] h-[100%] z-10 absolute bottom-[42%] "
           animate={{
-            translateX: ["-76%", "-0%"],
+            translateX: ["-1400px", "0%"],
             y: [0, 5, 0],
           }}
           transition={{
@@ -117,7 +117,7 @@ const Wave07 = ({ position }: { position: string }) => {
           style={{
             backgroundImage: "url('./images/hwave_v2_05.svg')",
             backgroundRepeat: "repeat-x",
-            backgroundSize: "38% auto",
+            backgroundSize: "700px auto",
             backgroundPosition: "bottom",
             transform: "translate3d(0, 0, 0)", // 開啟硬體加速
             opacity: 0.7,

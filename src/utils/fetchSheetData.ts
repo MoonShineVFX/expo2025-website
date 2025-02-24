@@ -137,3 +137,19 @@ export async function fetchCategorySheetData() {
     return [];
   }
 }
+
+//fetch json api https://r2web.expo2025-techworld-travel.com/data.json
+export async function fetchJsonData() {
+  const url = "https://r2web.expo2025-techworld-travel.com/data.json";
+  const response = await fetch(url);
+  const data = await response.json();
+  return data;
+}
+
+//fetch json api https://r2web.expo2025-techworld-travel.com/xx.json
+export async function fetchXXJsonData() {
+  const url = "https://r2web.expo2025-techworld-travel.com/xx.json";
+  const response = await fetch(url);
+  const data = await response.json();
+  return data;
+}

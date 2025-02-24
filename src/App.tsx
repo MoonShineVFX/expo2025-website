@@ -1,7 +1,11 @@
-import "./App.css";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import { fetchCategorySheetData, fetchSheetData } from "./utils/fetchSheetData";
+import {
+  fetchCategorySheetData,
+  fetchSheetData,
+  fetchJsonData,
+  fetchXXJsonData,
+} from "./utils/fetchSheetData";
 import ChartLayers from "./components/ChartLayers";
 import Wave05 from "./components/Wave05";
 import Wave06 from "./components/Wave06";
@@ -141,8 +145,8 @@ function App() {
     const loadData = async () => {
       try {
         setLoading(true);
-        const sheetData = await fetchSheetData();
-        const categoryData = await fetchCategorySheetData();
+        const sheetData = await fetchJsonData();
+        const categoryData = await fetchXXJsonData();
         const code = searchParams.get("code");
         let vParam = "";
         let pParam = "";
