@@ -1,11 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import {
-  fetchCategorySheetData,
-  fetchSheetData,
-  fetchJsonData,
-  fetchXXJsonData,
-} from "./utils/fetchSheetData";
+import { fetchJsonData, fetchXXJsonData } from "./utils/fetchSheetData";
 import ChartLayers from "./components/ChartLayers";
 import Wave05 from "./components/Wave05";
 import Wave06 from "./components/Wave06";
