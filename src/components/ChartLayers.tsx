@@ -31,16 +31,16 @@ const ChartLayers = ({
     const validNumbers = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
 
     // 加入數值解析的日誌
-    console.log(`${color} 原始值:`, value);
+    // console.log(`${color} 原始值:`, value);
     const numValue = parseInt(value);
-    console.log(`${color} 解析後:`, numValue);
+    // console.log(`${color} 解析後:`, numValue);
 
     const roundedValue = validNumbers.reduce((prev, curr) => {
       return Math.abs(curr - numValue) < Math.abs(prev - numValue)
         ? curr
         : prev;
     });
-    console.log(`${color} 四捨五入到最近的有效值:`, roundedValue);
+    // console.log(`${color} 四捨五入到最近的有效值:`, roundedValue);
 
     // 定義每個數值對應的深度
     const depthMap: { [key: number]: number } = {

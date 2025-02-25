@@ -22,6 +22,12 @@ interface CategoryData {
   name_jp: string;
   name_en: string;
   name_zh: string;
+  standard_jp: string;
+  standard_en: string;
+  standard_zh: string;
+  color_jp: string;
+  color_en: string;
+  color_zh: string;
   formattedNumber: string;
 }
 

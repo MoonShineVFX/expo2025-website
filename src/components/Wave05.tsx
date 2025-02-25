@@ -9,13 +9,13 @@ const Wave05 = ({ position }: { position: string }) => {
   };
   return (
     <div
-      className={`w-full -bottom-[0] left-0 overflow-hidden  z-50 h-[450px] md:h-[1000px]   ${position}`}
+      className={`w-full -bottom-[0] left-0 overflow-hidden  z-50 h-[450px] md:h-[300px]   ${position}`}
     >
       <div className="w-[1200%] h-[100%] z-0 absolute bottom-0  ">
         <motion.div
           className="w-[100%] h-[100%] z-0 absolute -bottom-0 "
           animate={{
-            translateX: ["-60%", "-0%"],
+            translateX: ["-1400px", "0%"],
           }}
           transition={{
             duration: transition.duration,
@@ -27,7 +27,7 @@ const Wave05 = ({ position }: { position: string }) => {
           style={{
             backgroundImage: `url('./images/footer_wave01.svg')`,
             backgroundRepeat: "repeat-x",
-            backgroundSize: "15% auto",
+            backgroundSize: "700px auto",
             backgroundPosition: "bottom ",
             imageRendering: "pixelated", // 改善圖片渲染
             backfaceVisibility: "hidden", // 防止渲染問題

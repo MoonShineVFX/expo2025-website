@@ -9,11 +9,11 @@ const Wave07 = ({ position }: { position: string }) => {
   };
   return (
     <div
-      className={`w-full  overflow-hidden  z-0 h-[320px]  md:h-[1000px] ${position}`}
+      className={`w-full  overflow-hidden  z-0 h-[320px]   md:h-[600px] ${position}`}
     >
       <div className="w-[500%] h-[100%] z-0 absolute bottom-0  ">
         <motion.div
-          className="w-[100%] h-[100%] z-0 absolute bottom-[24%]  "
+          className="w-[100%] h-[100%] z-0 absolute bottom-[24%] md:bottom-[10%] "
           animate={{
             translateX: ["-1400px", "0%"],
             y: [0, 15, 0],
@@ -36,7 +36,7 @@ const Wave07 = ({ position }: { position: string }) => {
           }}
         />
         <motion.div
-          className="w-[100%] h-[100%] z-0 absolute bottom-[17%]"
+          className="w-[100%] h-[100%] z-0 absolute bottom-[17%] md:bottom-[8%]"
           animate={{
             translateX: ["-1400px", "0%"],
             y: [0, 15, 0],
@@ -58,7 +58,7 @@ const Wave07 = ({ position }: { position: string }) => {
           }}
         />
         <motion.div
-          className="w-[100%] h-[100%] z-0 absolute bottom-[10%] "
+          className="w-[100%] h-[100%] z-0 absolute bottom-[10%] md:bottom-[2%] "
           animate={{
             translateX: ["-1400px", "0%"],
           }}
@@ -103,7 +103,7 @@ const Wave07 = ({ position }: { position: string }) => {
           }}
         />
         <motion.div
-          className="w-[100%] h-[100%] z-10 absolute bottom-[42%] "
+          className="w-[100%] h-[100%] z-10 absolute bottom-[42%] md:bottom-[30%] "
           animate={{
             translateX: ["-1400px", "0%"],
             y: [0, 5, 0],

@@ -9,6 +9,8 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import Wave07 from "./components/Wave07";
 import Wave08 from "./components/Wave08";
+import useMobile from "./hooks/useMobile";
+
 interface ParsedSheetData {
   number: number;
   formattedNumber: string;
@@ -20,6 +22,9 @@ interface ParsedSheetData {
   desc_jp: string;
   desc_en: string;
   desc_zh: string;
+  auth_jp: string;
+  auth_en: string;
+  auth_zh: string;
   videoname: string;
   videolink: string;
   folder: string;
@@ -33,6 +38,12 @@ interface CategoryData {
   name_jp: string;
   name_en: string;
   name_zh: string;
+  standard_jp: string;
+  standard_en: string;
+  standard_zh: string;
+  color_jp: string;
+  color_en: string;
+  color_zh: string;
 }
 
 interface DecryptResponse {
@@ -42,6 +53,7 @@ interface DecryptResponse {
 }
 
 function App() {
+  const isMobile = useMobile();
   const [searchParams] = useSearchParams();
   const [data, setData] = useState<ParsedSheetData[]>([]);
   const [currentStyle, setCurrentStyle] = useState<string>("");
@@ -50,7 +62,7 @@ function App() {
   const [p1, setP1] = useState("");
   const [p2, setP2] = useState("");
   const [p3, setP3] = useState("");
-  const [language, setLanguage] = useState<"jp" | "en" | "ch" | null>(null);
+  const [language, setLanguage] = useState<"jp" | "en" | "zh" | null>(null);
   const [isVisible, setIsVisible] = useState(true);
   const [showContent, setShowContent] = useState(false);
   const [showTopMenu, setShowTopMenu] = useState(true);
@@ -63,6 +75,10 @@ function App() {
       webTitle: "EXPO 2025 TechWorld Travel",
       webDesc: "探索台灣的美麗風景",
       category: "",
+      standard_word: "",
+      color_word: "",
+      font_color: "",
+      resource: "写真・文章提供：",
     },
     en: {
       title:
@@ -72,14 +88,22 @@ function App() {
       webTitle: "EXPO 2025 TechWorld Travel",
       webDesc: "Explore the beautiful scenery of Taiwan",
       category: "",
+      standard_word: "",
+      color_word: "",
+      font_color: "",
+      resource: "Photo & Text by：",
     },
-    ch: {
+    zh: {
       title: "非常感謝您\n讓我們有機會分享\n這個美麗的島嶼。",
       noData: "目前沒有任何行程",
       dataDesc: "您的3套行程推薦",
       webTitle: "EXPO 2025 TechWorld Travel",
       webDesc: "探索台灣的美麗風景",
       category: "",
+      standard_word: "",
+      color_word: "",
+      font_color: "",
+      resource: "圖文提供：",
     },
   });
 
@@ -88,7 +112,7 @@ function App() {
       id: 1,
       style: "s1",
       name: "自然",
-      color: "#4FCAD8",
+      color: "#37AFBC",
       gradient:
         "linear-gradient(0deg, #4FCAD8 0%, #f3feff 12%, #ffffff00 100%)",
     },
@@ -104,7 +128,7 @@ function App() {
       id: 3,
       style: "s3",
       name: "未來",
-      color: "#7CD8F0",
+      color: "#36ADE8",
       gradient:
         "linear-gradient(0deg, #7CD8F0 0%, #7CD8F050 12%, #ffffff00 100%)",
     },
@@ -165,19 +189,41 @@ function App() {
         const match = vParam.match(/s(\d)(\d{3})(\d{3})?(\d{3})?/);
         const matchP = pParam.match(/(\d{2})(\d{2})(\d{2})/);
         const matchC = cParam;
-        if (matchC) {
+        if (match && matchC) {
           const filterCategoryData = categoryData.filter(
             (item: CategoryData) => item.number === Number(matchC)
           );
-          console.log("分類:", filterCategoryData);
+          // get vParam 的 s1,s2,s3
+          const currentStyleData = styleArray.find(
+            (style) => style.style === `s${match[1]}`
+          );
 
-          if (filterCategoryData.length > 0) {
+          //filterCategoryData.standard_jp : あなたのtitleの旅 取代 title = filterCategoryData.color_jp
+          //filterCategoryData.standard_en : Your Journey of title 取代 title = filterCategoryData.color_en
+          //filterCategoryData.standard_zh : 您的title之旅 取代 title = filterCategoryData.color_zh
+          if (currentStyleData && filterCategoryData.length > 0) {
             setLanguageArray((prev) => ({
               ...prev,
-              jp: { ...prev.jp, category: filterCategoryData[0].name_jp },
-              en: { ...prev.en, category: filterCategoryData[0].name_en },
-              ch: { ...prev.ch, category: filterCategoryData[0].name_zh },
+              jp: {
+                ...prev.jp,
+                standard_word: filterCategoryData[0].standard_jp,
+                color_word: filterCategoryData[0].color_jp,
+                font_color: currentStyleData.color,
+              },
+              en: {
+                ...prev.en,
+                standard_word: filterCategoryData[0].standard_en,
+                color_word: filterCategoryData[0].color_en,
+                font_color: currentStyleData.color,
+              },
+              zh: {
+                ...prev.zh,
+                standard_word: filterCategoryData[0].standard_zh,
+                color_word: filterCategoryData[0].color_zh,
+                font_color: currentStyleData.color,
+              },
             }));
+            console.log("languageArray:", languageArray);
           }
         }
         if (matchP) {
@@ -277,7 +323,7 @@ function App() {
     }
   };
 
-  const handleLanguageChange = (lang: "jp" | "en" | "ch") => {
+  const handleLanguageChange = (lang: "jp" | "en" | "zh") => {
     setLanguage(lang);
 
     setTimeout(() => {
@@ -345,6 +391,25 @@ function App() {
         >
           <source src={videoUrl} type="video/mp4" />
         </video>
+      </div>
+    );
+  };
+
+  const replaceTitle = (
+    standard_word: string,
+    color_word: string,
+    color: string,
+    language: "jp" | "en" | "zh"
+  ) => {
+    const [before, after] = standard_word.split("title");
+
+    return (
+      <div className="flex flex-row items-center">
+        <span>{before}</span>
+        <span style={{ color: color }}>
+          {language === "en" ? <>&nbsp;{color_word}</> : color_word}
+        </span>
+        <span>{after}</span>
       </div>
     );
   };
@@ -466,9 +531,9 @@ function App() {
                 <motion.p
                   initial={{ opacity: 0, y: 10 }}
                   animate={{
-                    opacity: language === null ? 1 : language === "ch" ? 1 : 0,
+                    opacity: language === null ? 1 : language === "zh" ? 1 : 0,
                     y: 0,
-                    scale: language === null ? 1 : language === "ch" ? 1.2 : 1,
+                    scale: language === null ? 1 : language === "zh" ? 1.2 : 1,
                   }}
                   exit={{ opacity: 0, y: 0 }}
                   transition={{ duration: 0.5 }}
@@ -500,9 +565,9 @@ function App() {
                   EN
                 </button>
                 <button
-                  onClick={() => handleLanguageChange("ch")}
+                  onClick={() => handleLanguageChange("zh")}
                   className={`border border-white w-10 h-10 flex items-center justify-center ${
-                    language === "ch"
+                    language === "zh"
                       ? "bg-white text-[#5AB9F1]"
                       : "text-white hover:bg-white hover:text-[#5AB9F1]"
                   }`}
@@ -547,9 +612,9 @@ function App() {
                   EN
                 </button>
                 <button
-                  onClick={() => handleLanguageChange("ch")}
+                  onClick={() => handleLanguageChange("zh")}
                   className={`border border-white w-10 h-10 flex items-center justify-center ${
-                    language === "ch"
+                    language === "zh"
                       ? "bg-white text-[#5AB9F1]"
                       : "text-white hover:bg-white hover:text-[#5AB9F1]"
                   }`}
@@ -566,28 +631,28 @@ function App() {
       {/* 主要內容 */}
 
       {/*  Section */}
-      <section className="pb-[25%] min-h-screen flex flex-col items-center justify-center px-4 text-center bg-gradient-to-r from-[#76C6F3] via-[#5AB9F1] via-[#42ACE9] to-[#048BDB] relative">
+      <section className="pb-[25%] md:pt-[10%] min-h-screen  flex flex-col items-center justify-center px-4 text-center bg-gradient-to-r from-[#76C6F3] via-[#5AB9F1] via-[#42ACE9] to-[#048BDB] relative">
         <AnimatePresence>
           {showContent && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1.5 }}
-              className="flex flex-col items-center justify-center "
+              className={`flex flex-col md:flex-row items-center justify-center `}
             >
               <motion.div
-                className="flex flex-col items-start justify-center tracking-widest"
+                className="flex flex-col md:flex-row items-center md:items-start justify-center tracking-widest w-full md:w-1/2"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 0.5 }}
               >
-                <p className="text-xl md:text-2xl mb-2 text-white whitespace-pre-wrap text-left   leading-12">
+                <p className="text-xl md:text-3xl mb-2 text-white whitespace-pre-wrap text-left   leading-12 md:leading-16 md:tracking-widest">
                   {language && languageArray[language].title}
                 </p>
               </motion.div>
 
               <motion.div
-                className="w-12/12 h-full items-center justify-center relative"
+                className="w-full md:w-1/2 h-full items-center justify-center relative"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 1 }}
@@ -611,7 +676,7 @@ function App() {
       </section>
 
       {/* Intro Section */}
-      <section className="py-[30%] bg-white text-center relative  -mt-[2px] z-10">
+      <section className="py-[30%] md:py-[20%] bg-white text-center relative  -mt-[2px] z-10">
         <div
           className="flex flex-col items-center justify-center mb-15 -mt-[5%] "
           data-aos="fade-up"
@@ -620,7 +685,13 @@ function App() {
         >
           {data.length > 0 ? (
             <h2 className="text-3xl md:text-4xl font-bold">
-              {language && languageArray[language].category}
+              {language &&
+                replaceTitle(
+                  languageArray[language].standard_word,
+                  languageArray[language].color_word,
+                  languageArray[language].font_color,
+                  language
+                )}
             </h2>
           ) : (
             <h2 className="text-3xl md:text-4xl font-bold">
@@ -629,19 +700,17 @@ function App() {
           )}
         </div>
       </section>
-      <section className="relative pb-[50%] ">
+      <section className="relative pb-[50%] md:pb-[30%]  md:mt-[10%]  ">
         {/* Itinerary Sections */}
         {data.map((item, index) => {
           const currentStyle =
             styleArray.find((style) => style.name === item.category) ||
             styleArray[0];
 
-          console.log(currentStyle);
-
           return (
             <section
               key={item.number}
-              className="pb-[45%] max-w-full mx-auto relative -mt-[45%]"
+              className="pb-[45%] md:pb-[10%]  max-w-full mx-auto relative -mt-[45%] md:-mt-[10%]"
               style={{
                 background: currentStyle.gradient,
               }}
@@ -652,63 +721,104 @@ function App() {
                 sceneStyle={currentStyle.style}
               />
 
-              <div className="w-10/12 mx-auto relative ">
-                <h2
-                  className="text-2xl md:text-3xl font-bold mb- text-center flex flex-row items-center justify-between gap-2 px-[6px]"
-                  data-aos="fade-down"
-                  data-aos-duration="1300"
-                  data-aos-delay="200"
-                >
-                  <span>0{index + 1}</span>
-                  <div className="text-right">
-                    {language === "jp"
-                      ? item.name_jp
-                      : language === "en"
-                      ? item.name_en
-                      : item.name_zh}
-                  </div>
-                </h2>
-                {item.videoname && (
-                  <VideoPlayer videoUrl={`${videoDomain}/${item.videoname}`} />
-                )}
-                <div className="flex flex-row items-center justify-center gap-2 my-3">
-                  <img
-                    src="./images/dlbtn.png"
-                    alt=""
-                    className="w-[35px]"
-                    onClick={() =>
-                      downloadVideo(
-                        `${videoDomain}/${item.videoname}`,
-                        item.videoname
-                      )
-                    }
-                    data-aos="fade"
+              <div className="w-10/12 md:w-8/12 lg:w-6/12  mx-auto relative flex flex-col md:flex-row  items-stretch justify-center md:items-stretch md:gap-[7%] ">
+                <div className="w-full md:w-1/2  ">
+                  <h2
+                    className="text-2xl md:text-3xl font-bold mb- text-center flex flex-row items-center justify-between gap-2 px-[6px]"
+                    data-aos="fade-down"
                     data-aos-duration="1300"
                     data-aos-delay="200"
-                  />
+                  >
+                    <span>0{index + 1}</span>
+                    <div className="text-right">
+                      {language === "jp"
+                        ? item.name_jp
+                        : language === "en"
+                        ? item.name_en
+                        : item.name_zh}
+                    </div>
+                  </h2>
+                  {item.videoname && (
+                    <VideoPlayer
+                      videoUrl={`${videoDomain}/${item.videoname}`}
+                    />
+                  )}
+                  <div className="flex flex-row items-center justify-center gap-2 my-3">
+                    <img
+                      src="./images/dlbtn.png"
+                      alt=""
+                      className="w-[35px]"
+                      onClick={() =>
+                        downloadVideo(
+                          `${videoDomain}/${item.videoname}`,
+                          item.videoname
+                        )
+                      }
+                      data-aos="fade"
+                      data-aos-duration="1300"
+                      data-aos-delay="200"
+                    />
+                  </div>
                 </div>
-                <div
-                  className="prose max-w-none md:prose-lg mx-auto leading-8 text-[#1E1E1E] px-1"
-                  data-aos="fade-up"
-                  data-aos-duration="1300"
-                  data-aos-delay="200"
-                >
-                  {language === "jp"
-                    ? item.desc_jp
-                    : language === "en"
-                    ? item.desc_en
-                    : item.desc_zh}
+
+                <div className="w-full md:w-1/2   flex flex-col justify-between ">
+                  {!isMobile && (
+                    <h2
+                      className="text-2xl md:text-3xl font-bold  text-center flex flex-row items-center justify-between gap-2 px-[6px] text-transparent "
+                      data-aos="fade-down"
+                      data-aos-duration="1300"
+                      data-aos-delay="200"
+                    >
+                      <span>0{index + 1}</span>
+                      <div className="text-right">
+                        {language === "jp"
+                          ? item.name_jp
+                          : language === "en"
+                          ? item.name_en
+                          : item.name_zh}
+                      </div>
+                    </h2>
+                  )}
+                  <div
+                    className=" flex flex-col h-full justify-between  prose  md:prose-lg mx-auto leading-8 text-[#1E1E1E] px-1 md:text-lg md:leading-8 pt-[6px] md:tracking-wider"
+                    data-aos="fade-up"
+                    data-aos-duration="1300"
+                    data-aos-delay="200"
+                  >
+                    <div className="">
+                      {language === "jp"
+                        ? item.desc_jp
+                        : language === "en"
+                        ? item.desc_en
+                        : item.desc_zh}
+                    </div>
+                    <div className="w-full hidden md:block mt-auto">
+                      <div
+                        className="text-sm  md:text-lg  text-left text-[#1E1E1E]"
+                        data-aos="fade-up"
+                        data-aos-duration="1300"
+                        data-aos-delay="200"
+                      >
+                        {language && languageArray[language].resource}{" "}
+                        {language === "jp"
+                          ? item.auth_jp
+                          : language === "en"
+                          ? item.auth_en
+                          : item.auth_zh}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </section>
           );
         })}
-        <Wave05 position={"absolute bottom-0 left-0"} />
+        <Wave05 position={"absolute bottom-0 md:bottom-[12%] left-0"} />
       </section>
 
       {/* Footer */}
-      <footer className=" text-center   relative -mt-[20%]">
-        <div className="w-full  bg-gradient-to-t from-[#73C5F3] via-[#43ADE9]  to-[#0D90DD] h-[120vh] relative">
+      <footer className=" text-center   relative -mt-[20%] md:-mt-[20%]">
+        <div className="w-full  bg-gradient-to-t from-[#73C5F3] via-[#43ADE9]  to-[#0D90DD] h-[120vh] md:h-[100vh] relative">
           <img
             src="./images/footer_top.png"
             alt="logo"
