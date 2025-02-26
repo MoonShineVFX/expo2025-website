@@ -760,7 +760,7 @@ function App() {
             >
               <Wave06 position={"relative"} sceneStyle={currentStyle.style} />
               <Wave08
-                position={"absolute top-[50%] left-0"}
+                position={"absolute top-[50%] md:top-[30%] left-0"}
                 sceneStyle={currentStyle.style}
               />
 
