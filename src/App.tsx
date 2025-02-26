@@ -468,6 +468,49 @@ function App() {
     };
   }, [isVisible]);
 
+  const [videoHeight, setVideoHeight] = useState<number | null>(null);
+  const videoRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const updateHeight = () => {
+      if (videoRef.current) {
+        const height = videoRef.current.offsetHeight;
+        console.log("Current video height:", height);
+        if (height > 0) {
+          setVideoHeight(height);
+        }
+      }
+    };
+
+    // 多次檢查以確保獲取到正確高度
+    const checkHeight = () => {
+      updateHeight();
+      if (!videoHeight || videoHeight === 0) {
+        setTimeout(checkHeight, 100);
+      }
+    };
+
+    checkHeight();
+
+    // 監聽視窗大小變化
+    window.addEventListener("resize", updateHeight);
+
+    // MutationObserver 監聽元素變化
+    const observer = new MutationObserver(updateHeight);
+    if (videoRef.current) {
+      observer.observe(videoRef.current, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+      });
+    }
+
+    return () => {
+      window.removeEventListener("resize", updateHeight);
+      observer.disconnect();
+    };
+  }, [videoHeight]);
+
   if (loading)
     return (
       <AnimatePresence>
@@ -709,7 +752,7 @@ function App() {
 
           return (
             <section
-              key={item.number}
+              key={item.number + index}
               className="pb-[45%] md:pb-[10%]  max-w-full mx-auto relative -mt-[45%] md:-mt-[10%]"
               style={{
                 background: currentStyle.gradient,
@@ -721,7 +764,7 @@ function App() {
                 sceneStyle={currentStyle.style}
               />
 
-              <div className="w-10/12 md:w-8/12 lg:w-6/12  mx-auto relative flex flex-col md:flex-row  items-stretch justify-center md:items-stretch md:gap-[7%] ">
+              <div className="w-10/12 md:w-8/12   mx-auto relative flex flex-col md:flex-row  items-stretch justify-center md:items-stretch md:gap-[7%] ">
                 <div className="w-full md:w-1/2  ">
                   <h2
                     className="text-2xl md:text-3xl font-bold mb- text-center flex flex-row items-center justify-between gap-2 px-[6px]"
@@ -739,9 +782,11 @@ function App() {
                     </div>
                   </h2>
                   {item.videoname && (
-                    <VideoPlayer
-                      videoUrl={`${videoDomain}/${item.videoname}`}
-                    />
+                    <div ref={videoRef} className="video-container">
+                      <VideoPlayer
+                        videoUrl={`${videoDomain}/${item.videoname}`}
+                      />
+                    </div>
                   )}
                   <div className="flex flex-row items-center justify-center gap-2 my-3">
                     <img
@@ -780,12 +825,17 @@ function App() {
                     </h2>
                   )}
                   <div
-                    className=" flex flex-col h-full justify-between  prose  md:prose-lg mx-auto leading-8 text-[#1E1E1E] px-1 md:text-lg md:leading-8 pt-[6px] md:tracking-wider"
+                    className=" flex flex-col h-full justify-between  prose  md:prose-lg mx-auto leading-8 text-[#1E1E1E] px-1 md:text-lg md:leading-8 pt-[6px] md:tracking-wider "
                     data-aos="fade-up"
                     data-aos-duration="1300"
                     data-aos-delay="200"
                   >
-                    <div className="">
+                    <div
+                      className="w-full max-w-xl overflow-y-auto scrollbar pr-6"
+                      style={{
+                        height: videoHeight ? `${videoHeight}px` : "auto",
+                      }}
+                    >
                       {language === "jp"
                         ? item.desc_jp
                         : language === "en"
@@ -813,7 +863,9 @@ function App() {
             </section>
           );
         })}
-        <Wave05 position={"absolute bottom-0 md:bottom-[12%] left-0"} />
+        <Wave05
+          position={"absolute bottom-0 sm:bottom-[12%] md:bottom-[8%] left-0"}
+        />
       </section>
 
       {/* Footer */}
