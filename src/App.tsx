@@ -79,6 +79,9 @@ function App() {
       color_word: "",
       font_color: "",
       resource: "写真・文章提供：",
+      nature: "自然",
+      life: "生命",
+      future: "未来",
     },
     en: {
       title:
@@ -91,7 +94,10 @@ function App() {
       standard_word: "",
       color_word: "",
       font_color: "",
-      resource: "Photo & Text by：",
+      resource: "Photo & Text by: ",
+      nature: "NATURE",
+      life: "LIFE",
+      future: "FUTURE",
     },
     zh: {
       title: "非常感謝您\n讓我們有機會分享\n這個美麗的島嶼。",
@@ -104,6 +110,9 @@ function App() {
       color_word: "",
       font_color: "",
       resource: "圖文提供：",
+      nature: "自然",
+      life: "生命",
+      future: "未來",
     },
   });
 
@@ -676,15 +685,16 @@ function App() {
       {/*  Section */}
       <section className="pb-[25%] md:pt-[10%] min-h-screen  flex flex-col items-center justify-center px-4 text-center bg-gradient-to-r from-[#76C6F3] via-[#5AB9F1] via-[#42ACE9] to-[#048BDB] relative">
         <AnimatePresence>
-          {showContent && (
+          {
             <motion.div
               initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              animate={{ opacity: showContent ? 1 : 0 }}
               transition={{ duration: 1.5 }}
               className={`flex flex-col md:flex-row items-center justify-center `}
             >
               <motion.div
-                className="flex flex-col md:flex-row items-center md:items-start justify-center tracking-widest w-full md:w-1/2"
+                key={language && languageArray[language].title}
+                className="flex flex-col md:flex-row items-center md:items-start justify-center tracking-widest w-full md:w-[500px]"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 0.5 }}
@@ -704,24 +714,31 @@ function App() {
                   <img src="./images/charts2/bg01.svg" alt="logo" />
                   <ChartLayers pink={p1} green={p2} blue={p3} />
                 </div>
-
-                <div className="ml-[24%] mr-[23%]  mx-auto h-full flex items-center justify-between">
-                  <div className="text-white/80 text-sm">生命</div>
-                  <div className="text-white/80 text-sm">自然</div>
-                  <div className="text-white/80 text-sm">未來</div>
+                <div className="w-10/12 mx-auto  relative my-[0%] ">
+                  <div className="mx-auto flex items-center justify-between  w-[68%] md:w-[64%]  ">
+                    <div className="text-white/80 text-sm md:text-[18px] text-center w-[20%]  md:w-[12%]  ">
+                      {language && languageArray[language].life}
+                    </div>
+                    <div className="text-white/80 text-sm md:text-[18px] text-center w-[60%] md:w-[85%] ">
+                      {language && languageArray[language].nature}
+                    </div>
+                    <div className="text-white/80 text-sm md:text-[18px] text-center  w-[20%] md:w-[12%]  ">
+                      {language && languageArray[language].future}
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             </motion.div>
-          )}
+          }
         </AnimatePresence>
 
         <Wave07 position={"absolute -bottom-[15%] left-0"} />
       </section>
 
       {/* Intro Section */}
-      <section className="py-[30%] md:py-[20%] bg-white text-center relative  -mt-[2px] z-10">
+      <section className="py-[30%] md:py-[12%] bg-white text-center relative  -mt-[2px] z-10">
         <div
-          className="flex flex-col items-center justify-center mb-15 -mt-[5%] "
+          className="flex flex-col items-center justify-center mb-15 md:mb-0 -mt-[5%] md:-mt-[0%] "
           data-aos="fade-up"
           data-aos-duration="1300"
           data-aos-delay="200"
@@ -781,35 +798,37 @@ function App() {
                         : item.name_zh}
                     </div>
                   </h2>
-                  {item.videoname && (
-                    <div ref={videoRef} className="video-container">
-                      <VideoPlayer
-                        videoUrl={`${videoDomain}/${item.videoname}`}
+                  <div className="flex flex-col h-full">
+                    {item.videoname && (
+                      <div ref={videoRef} className="video-container">
+                        <VideoPlayer
+                          videoUrl={`${videoDomain}/${item.videoname}`}
+                        />
+                      </div>
+                    )}
+                    <div className="w-full  mt-4  md:mt-auto h-12 flex items-center justify-center ">
+                      <img
+                        src="./images/dlbtn.png"
+                        alt=""
+                        className="w-[35px]"
+                        onClick={() =>
+                          downloadVideo(
+                            `${videoDomain}/${item.videoname}`,
+                            item.videoname
+                          )
+                        }
+                        data-aos="fade"
+                        data-aos-duration="1300"
+                        data-aos-delay="200"
                       />
                     </div>
-                  )}
-                  <div className="flex flex-row items-center justify-center gap-2 my-3">
-                    <img
-                      src="./images/dlbtn.png"
-                      alt=""
-                      className="w-[35px]"
-                      onClick={() =>
-                        downloadVideo(
-                          `${videoDomain}/${item.videoname}`,
-                          item.videoname
-                        )
-                      }
-                      data-aos="fade"
-                      data-aos-duration="1300"
-                      data-aos-delay="200"
-                    />
                   </div>
                 </div>
 
-                <div className="w-full md:w-1/2   flex flex-col justify-between ">
+                <div className="w-full md:w-1/2    ">
                   {!isMobile && (
                     <h2
-                      className="text-2xl md:text-3xl font-bold  text-center flex flex-row items-center justify-between gap-2 px-[6px] text-transparent "
+                      className="text-2xl md:text-3xl font-bold mb- text-center flex flex-row items-center justify-between gap-2 px-[6px] text-transparent"
                       data-aos="fade-down"
                       data-aos-duration="1300"
                       data-aos-delay="200"
@@ -825,26 +844,33 @@ function App() {
                     </h2>
                   )}
                   <div
-                    className=" flex flex-col h-full justify-between  prose  md:prose-lg mx-auto leading-8 text-[#1E1E1E] px-1 md:text-lg md:leading-8 pt-[6px] md:tracking-wider "
+                    className=" flex flex-col h-full justify-between  leading-8 text-[#1E1E1E] px-1 md:text-[18px] md:leading-8  md:tracking-wider "
                     data-aos="fade-up"
                     data-aos-duration="1300"
                     data-aos-delay="200"
                   >
-                    <div
-                      className="w-full max-w-xl overflow-y-auto scrollbar pr-6"
-                      style={{
-                        height: videoHeight ? `${videoHeight}px` : "auto",
-                      }}
-                    >
-                      {language === "jp"
-                        ? item.desc_jp
-                        : language === "en"
-                        ? item.desc_en
-                        : item.desc_zh}
-                    </div>
-                    <div className="w-full hidden md:block mt-auto">
+                    <div className="md:aspect-square w-full  mt-4">
                       <div
-                        className="text-sm  md:text-lg  text-left text-[#1E1E1E]"
+                        className="w-full max-w-xl overflow-y-auto scrollbar"
+                        style={{
+                          height: isMobile
+                            ? "auto"
+                            : videoHeight
+                            ? `${videoHeight - 50}px`
+                            : "auto",
+                        }}
+                      >
+                        {language === "jp"
+                          ? item.desc_jp
+                          : language === "en"
+                          ? item.desc_en
+                          : item.desc_zh}
+                      </div>
+                    </div>
+
+                    <div className="w-full   mt-auto h-12 flex items-center ">
+                      <div
+                        className="text-sm  md:text-[16px]  text-left text-[#1E1E1E]"
                         data-aos="fade-up"
                         data-aos-duration="1300"
                         data-aos-delay="200"
@@ -864,31 +890,72 @@ function App() {
           );
         })}
         <Wave05
-          position={"absolute bottom-0 sm:bottom-[12%] md:bottom-[8%] left-0"}
+          position={
+            "absolute bottom-[3%]  md:bottom-[0%] lg:bottom-[12%] left-0"
+          }
         />
       </section>
 
       {/* Footer */}
-      <footer className=" text-center   relative -mt-[20%] md:-mt-[20%]">
-        <div className="w-full  bg-gradient-to-t from-[#73C5F3] via-[#43ADE9]  to-[#0D90DD] h-[120vh] md:h-[100vh] relative">
-          <img
+      <footer className=" text-center   relative -mt-[20%] md:-mt-[20%] pt-[10%] ">
+        <div className="w-full  bg-gradient-to-t from-[#73C5F3] via-[#43ADE9]  to-[#0D90DD] h-[100vh] md:h-[100vh] relative">
+          {/* <img
             src="./images/footer_top.png"
             alt="logo"
             className="w-full  top-0 left-0"
-          />
+          /> */}
           <div
-            className="flex flex-row items-center justify-center gap-2 mt-14"
-            data-aos="fade"
-            data-aos-duration="1300"
-            data-aos-delay="200"
-          >
-            <img
-              src="./images/sharebtn.png"
-              alt=""
-              className="w-[35px]"
-              onClick={sharePageUrl}
-            />
-          </div>
+            className="w-[100%]  h-[30px] z-0  -mt-[1%]  drop-shadow-[0_10px_4px_rgba(0,0,0,0.1)] bg-[450px_auto] md:bg-[700px_auto]  "
+            style={{
+              backgroundImage: "url('./images/footer_wave02.svg')",
+              backgroundRepeat: "repeat-x",
+
+              backgroundPosition: "bottom",
+              opacity: 1,
+            }}
+          />
+          {isMobile && (
+            <div
+              className="flex flex-row items-center justify-center gap-2  pt-[50px]"
+              data-aos="fade"
+              data-aos-duration="1300"
+              data-aos-delay="200"
+            >
+              <img
+                src="./images/sharebtn.png"
+                alt=""
+                className="w-[35px]"
+                onClick={sharePageUrl}
+              />
+            </div>
+          )}
+          {!isMobile && (
+            <div className=" px-[3%]  absolute bottom-[5%] left-0 right-0">
+              <div className="w-full    relative flex justify-between border-t border-white/50 pt-[20px]">
+                <div className=" cursor-pointer">
+                  <img
+                    src="./images/sharebtn.svg"
+                    alt="logo"
+                    className="w-[35px]"
+                    onClick={sharePageUrl}
+                  />
+                </div>
+                <div className=" cursor-pointer">
+                  <img
+                    src="./images/topbtn.svg"
+                    alt="logo"
+                    className="w-[45px]"
+                    onClick={() => {
+                      window.scrollTo({
+                        top: 0,
+                        behavior: "smooth",
+                      });
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </footer>
     </div>
