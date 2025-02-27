@@ -129,7 +129,7 @@ function App() {
       id: 2,
       style: "s2",
       name: "生命",
-      color: "#FFD1E4",
+      color: "#F481B1",
       gradient:
         "linear-gradient(0deg, #ffd1e4 0%, #fff4f9 12%, #ffffff00 100%)",
     },
