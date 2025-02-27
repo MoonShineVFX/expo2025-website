@@ -347,10 +347,15 @@ function App() {
   const VideoPlayer = ({ videoUrl }: { videoUrl: string }) => {
     const videoRef = useRef<HTMLVideoElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
+    const isResizing = useRef(false);
+    const resizeTimer = useRef<ReturnType<typeof setTimeout>>(null);
 
     useEffect(() => {
       const observer = new IntersectionObserver(
         (entries) => {
+          // 如果正在調整視窗大小，不執行播放邏輯
+          if (isResizing.current) return;
+
           entries.forEach((entry) => {
             if (entry.isIntersecting && videoRef.current) {
               videoRef.current.play();
@@ -363,11 +368,34 @@ function App() {
         { threshold: 0.5 }
       );
 
+      // 添加視窗調整監聽
+      const handleResize = () => {
+        isResizing.current = true;
+
+        // 清除之前的計時器
+        if (resizeTimer.current) {
+          clearTimeout(resizeTimer.current);
+        }
+
+        // 設定新的計時器
+        resizeTimer.current = setTimeout(() => {
+          isResizing.current = false;
+        }, 200);
+      };
+
+      window.addEventListener("resize", handleResize);
+
       if (containerRef.current) {
         observer.observe(containerRef.current);
       }
 
-      return () => observer.disconnect();
+      return () => {
+        observer.disconnect();
+        window.removeEventListener("resize", handleResize);
+        if (resizeTimer.current) {
+          clearTimeout(resizeTimer.current);
+        }
+      };
     }, []);
 
     return (
@@ -715,14 +743,30 @@ function App() {
                   <ChartLayers pink={p1} green={p2} blue={p3} />
                 </div>
                 <div className="w-10/12 mx-auto  relative my-[0%] ">
-                  <div className="mx-auto flex items-center justify-between  w-[68%] md:w-[64%]  ">
-                    <div className="text-white/80 text-sm md:text-[18px] text-center w-[20%]  md:w-[12%]  ">
+                  <div
+                    className={`mx-auto flex items-center justify-between    ${
+                      language === "en" ? "w-[84%]" : "w-[68%] md:w-[66%]"
+                    }`}
+                  >
+                    <div
+                      className={`text-white/80 text-sm md:text-[18px] text-center  ${
+                        language === "en" ? "w-[33%]" : "w-[20%] md:w-[16%]"
+                      }`}
+                    >
                       {language && languageArray[language].life}
                     </div>
-                    <div className="text-white/80 text-sm md:text-[18px] text-center w-[60%] md:w-[85%] ">
+                    <div
+                      className={`text-white/80 text-sm md:text-[18px] text-center ${
+                        language === "en" ? "w-[33%]" : "w-[60%] md:w-auto"
+                      }`}
+                    >
                       {language && languageArray[language].nature}
                     </div>
-                    <div className="text-white/80 text-sm md:text-[18px] text-center  w-[20%] md:w-[12%]  ">
+                    <div
+                      className={`text-white/80 text-sm md:text-[18px] text-center  ${
+                        language === "en" ? "w-[33%]" : "w-[20%] md:w-[15%]"
+                      }`}
+                    >
                       {language && languageArray[language].future}
                     </div>
                   </div>
@@ -770,7 +814,7 @@ function App() {
           return (
             <section
               key={item.number + index}
-              className="pb-[45%] md:pb-[10%]  max-w-full mx-auto relative -mt-[45%] md:-mt-[10%]"
+              className="pb-[45%] md:pb-[25%] lg:pb-[28%]  max-w-full mx-auto relative -mt-[45%]  md:-mt-[17%]"
               style={{
                 background: currentStyle.gradient,
               }}
@@ -891,13 +935,13 @@ function App() {
         })}
         <Wave05
           position={
-            "absolute bottom-[3%]  md:bottom-[0%] lg:bottom-[12%] left-0"
+            "absolute bottom-[3%] sm:bottom-[4%] md:bottom-[5%] lg:bottom-[8%] left-0"
           }
         />
       </section>
 
       {/* Footer */}
-      <footer className=" text-center   relative -mt-[20%] md:-mt-[20%] pt-[10%] ">
+      <footer className=" text-center   relative -mt-[20%] md:-mt-[20%] lg:-mt-[10%] pt-[10%] ">
         <div className="w-full  bg-gradient-to-t from-[#73C5F3] via-[#43ADE9]  to-[#0D90DD] h-[100vh] md:h-[100vh] relative">
           {/* <img
             src="./images/footer_top.png"
