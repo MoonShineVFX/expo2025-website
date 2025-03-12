@@ -848,7 +848,7 @@ function App() {
           </div>
         </div>
       </section>
-      <section className="relative pb-[0%] md:pb-[30%]  md:mt-[10%]  ">
+      <section className="relative pb-[0%] md:pb-[0%]  md:mt-[10%]  ">
         {/* Itinerary Sections */}
         {data.length > 0 &&
           data.map((item, index) => {
@@ -979,15 +979,15 @@ function App() {
             );
           })}
       </section>
-      <section className="relative  z-0   ">
+      <section className="relative  z-0 md:mb-[10%]  ">
         <Wave05
           position={
-            "absolute   left-0 -z-10 h-[250px] md:h-[300px] -mt-[25%]   "
+            "absolute   left-0 -z-10 h-[250px] md:h-[320px] -mt-[25%] md:-mt-[22%]   "
           }
         />
-        <div className=" text-2xl md:text-2xl font-bold w-10/12 mx-auto">
+        <div className=" text-2xl md:text-3xl font-bold w-10/12 md:w-6/12 mx-auto md:my-[5%] ">
           {language && languageArray[language].more}
-          <div className="flex flex-col gap-2 mt-4">
+          <div className="flex flex-col gap-2 mt-4 md:my-[5%] ">
             {moreData.length > 0 &&
               moreData.map((item, index) => {
                 return (
