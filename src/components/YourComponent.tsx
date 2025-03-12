@@ -148,7 +148,10 @@ const YourComponent = () => {
       {/* 資料顯示區塊 */}
       <div className={getStyle()}>
         {data.map((item) => (
-          <div key={item.number} className="border rounded-lg p-4 shadow-md">
+          <div
+            key={"style" + item.number}
+            className="border rounded-lg p-4 shadow-md"
+          >
             <div className="flex items-center gap-2 mb-2">
               <span className="text-sm text-gray-500">
                 #{item.formattedNumber}

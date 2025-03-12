@@ -300,13 +300,19 @@ function App() {
     allData: ParsedSheetData[],
     excludeNumbers: string[]
   ) => {
-    // 過濾掉已顯示的項目
+    // 確保 excludeNumbers 中的所有值都是字符串
+    const normalizedExcludeNumbers = excludeNumbers.map((num) => String(num));
+
+    // 過濾掉已顯示的項目，並確保有效的 formattedNumber
     const availableData = allData.filter(
-      (item) => !excludeNumbers.includes(item.formattedNumber)
+      (item) =>
+        item.formattedNumber &&
+        !normalizedExcludeNumbers.includes(String(item.formattedNumber))
     );
 
     // 如果可用資料少於3個，則全部顯示
     if (availableData.length <= 3) {
+      console.log("可用資料少於3個，顯示全部:", availableData.length);
       setMoreData(availableData);
       return;
     }
@@ -316,7 +322,10 @@ function App() {
     const tempData = [...availableData]; // 創建副本以避免修改原始資料
 
     for (let i = 0; i < 3; i++) {
-      if (tempData.length === 0) break;
+      if (tempData.length === 0) {
+        console.log("臨時數據已用完，只能選擇", i, "個項目");
+        break;
+      }
 
       // 生成隨機索引
       const randomIndex = Math.floor(Math.random() * tempData.length);
@@ -993,7 +1002,7 @@ function App() {
             {moreData.length > 0 &&
               moreData.map((item, index) => {
                 return (
-                  <div key={"recommend" + item.number + index}>
+                  <div key={"recommend" + item.number + item.name_zh}>
                     <div
                       className="text-right"
                       data-aos="fade-down"
