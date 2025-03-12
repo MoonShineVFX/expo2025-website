@@ -839,7 +839,7 @@ function App() {
             </h2>
           )}
           <div
-            className="text-lg md:text-xl text-center w-11/12 mx-auto mt-4"
+            className="text-lg md:text-xl text-center w-[70%] md:w-[60%] mx-auto mt-[10%] md:mt-[5%] whitespace-pre-wrap"
             data-aos="fade-up"
             data-aos-duration="1300"
             data-aos-delay="200"
@@ -985,9 +985,11 @@ function App() {
             "absolute   left-0 -z-10 h-[250px] md:h-[320px] -mt-[25%] md:-mt-[22%]   "
           }
         />
-        <div className=" text-2xl md:text-3xl font-bold w-10/12 md:w-6/12 mx-auto md:my-[5%] ">
-          {language && languageArray[language].more}
-          <div className="flex flex-col gap-2 mt-4 md:my-[5%] ">
+        <div className="  font-bold w-10/12 md:w-6/12 mx-auto md:my-[5%] ">
+          <div className="text-xl md:text-xl">
+            {language && languageArray[language].more}
+          </div>
+          <div className="flex flex-col gap-2 mt-[10%] md:my-[5%] text-xl md:text-xl ">
             {moreData.length > 0 &&
               moreData.map((item, index) => {
                 return (
