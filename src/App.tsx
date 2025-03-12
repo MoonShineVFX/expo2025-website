@@ -785,7 +785,9 @@ function App() {
               >
                 <div className="w-10/12 mx-auto h-full relative my-[8%]">
                   <img src="./images/charts2/bg01.svg" alt="logo" />
-                  <ChartLayers pink={p1} green={p2} blue={p3} />
+                  {showContent && (
+                    <ChartLayers pink={p1} green={p2} blue={p3} />
+                  )}
                 </div>
                 <div className="w-10/12 mx-auto  relative my-[0%] ">
                   <div
