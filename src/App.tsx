@@ -938,7 +938,7 @@ function App() {
                       data-aos-duration="1300"
                       data-aos-delay="200"
                     >
-                      <div className="md:aspect-square w-full  mt-4">
+                      <div className="md:aspect-square w-full  mt-4 ">
                         <div
                           className="w-full max-w-xl overflow-y-auto scrollbar"
                           style={{
@@ -957,7 +957,7 @@ function App() {
                         </div>
                       </div>
 
-                      <div className="w-full   mt-auto h-12 flex items-center ">
+                      <div className="w-full  mt-[10%]  md:mt-auto h-12 flex items-center ">
                         <div
                           className="text-sm  md:text-[16px]  text-left text-[#1E1E1E]"
                           data-aos="fade-up"
@@ -982,14 +982,14 @@ function App() {
       <section className="relative  z-0 md:mb-[10%]  ">
         <Wave05
           position={
-            "absolute   left-0 -z-10 h-[250px] md:h-[320px] -mt-[25%] md:-mt-[22%]   "
+            "absolute   left-0 -z-10 h-[250px] md:h-[320px] -mt-[33%] md:-mt-[22%]   "
           }
         />
-        <div className="  font-bold w-10/12 md:w-6/12 mx-auto md:my-[5%] ">
-          <div className="text-xl md:text-xl">
+        <div className="   w-10/12 md:w-6/12 mx-auto my-[10%] md:my-[5%] ">
+          <div className="text-lg md:text-xl">
             {language && languageArray[language].more}
           </div>
-          <div className="flex flex-col gap-2 mt-[10%] md:my-[5%] text-xl md:text-xl ">
+          <div className="flex flex-col gap-2 my-[10%] md:my-[5%] text-lg md:text-xl ">
             {moreData.length > 0 &&
               moreData.map((item, index) => {
                 return (
@@ -1015,7 +1015,7 @@ function App() {
 
       {/* Footer */}
       <footer className=" text-center   relative mt-[20%] md:-mt-[20%] lg:-mt-[10%] pt-[10%] ">
-        <div className="w-full  bg-gradient-to-t from-[#73C5F3] via-[#43ADE9]  to-[#0D90DD] h-[100vh] md:h-[100vh] relative">
+        <div className="w-full  bg-gradient-to-t from-[#73C5F3] via-[#43ADE9]  to-[#0D90DD] h-[60vh] md:h-[60vh] relative">
           {/* <img
             src="./images/footer_top.png"
             alt="logo"
