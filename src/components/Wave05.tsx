@@ -8,9 +8,7 @@ const Wave05 = ({ position }: { position: string }) => {
     times: [0, 1],
   };
   return (
-    <div
-      className={`w-full  left-0 overflow-hidden  z-50 h-[350px] md:h-[300px]   ${position}`}
-    >
+    <div className={`w-full  overflow-hidden   ${position}`}>
       <div className="w-[1200%] h-[100%] z-0 absolute bottom-0  ">
         <motion.div
           className="w-[100%] h-[100%] z-0 absolute -bottom-0 "

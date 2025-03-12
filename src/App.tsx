@@ -44,6 +44,9 @@ interface CategoryData {
   color_jp: string;
   color_en: string;
   color_zh: string;
+  story_jp: string;
+  story_en: string;
+  story_zh: string;
 }
 
 interface DecryptResponse {
@@ -56,6 +59,7 @@ function App() {
   const isMobile = useMobile();
   const [searchParams] = useSearchParams();
   const [data, setData] = useState<ParsedSheetData[]>([]);
+  const [moreData, setMoreData] = useState<ParsedSheetData[]>([]);
   const [currentStyle, setCurrentStyle] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -82,6 +86,8 @@ function App() {
       nature: "自然",
       life: "生命",
       future: "未来",
+      story: "",
+      more: "あなたの体験に基づいて、こちらもおすすめします…",
     },
     en: {
       title:
@@ -98,6 +104,8 @@ function App() {
       nature: "NATURE",
       life: "LIFE",
       future: "FUTURE",
+      story: "",
+      more: "Based on your experience, we also recommend…",
     },
     zh: {
       title: "非常感謝您\n讓我們有機會分享\n這個美麗的島嶼。",
@@ -113,6 +121,8 @@ function App() {
       nature: "自然",
       life: "生命",
       future: "未來",
+      story: "",
+      more: "根據您的體驗，推薦給您的還有…",
     },
   });
 
@@ -123,7 +133,7 @@ function App() {
       name: "自然",
       color: "#37AFBC",
       gradient:
-        "linear-gradient(0deg, #4FCAD8 0%, #f3feff 12%, #ffffff00 100%)",
+        "linear-gradient(0deg, #4FCAD8 0%, #f3feff50 12%, #ffffff00 100%)",
     },
     {
       id: 2,
@@ -131,7 +141,7 @@ function App() {
       name: "生命",
       color: "#F481B1",
       gradient:
-        "linear-gradient(0deg, #ffd1e4 0%, #fff4f9 12%, #ffffff00 100%)",
+        "linear-gradient(0deg, #ffd1e4 0%, #fff4f950 12%, #ffffff00 100%)",
     },
     {
       id: 3,
@@ -218,18 +228,21 @@ function App() {
                 standard_word: filterCategoryData[0].standard_jp,
                 color_word: filterCategoryData[0].color_jp,
                 font_color: currentStyleData.color,
+                story: filterCategoryData[0].story_jp,
               },
               en: {
                 ...prev.en,
                 standard_word: filterCategoryData[0].standard_en,
                 color_word: filterCategoryData[0].color_en,
                 font_color: currentStyleData.color,
+                story: filterCategoryData[0].story_en,
               },
               zh: {
                 ...prev.zh,
                 standard_word: filterCategoryData[0].standard_zh,
                 color_word: filterCategoryData[0].color_zh,
                 font_color: currentStyleData.color,
+                story: filterCategoryData[0].story_zh,
               },
             }));
             console.log("languageArray:", languageArray);
@@ -266,6 +279,9 @@ function App() {
 
           console.log("排序後的資料:", sortedData);
           setData(sortedData);
+
+          // 從原始資料中排除已顯示的項目，然後隨機選擇三個作為推薦
+          getRandomRecommendations(sheetData, numbers);
         } else {
           //顯示現在沒有行程
           setData([]);
@@ -279,6 +295,39 @@ function App() {
 
     loadData();
   }, [searchParams]);
+
+  const getRandomRecommendations = (
+    allData: ParsedSheetData[],
+    excludeNumbers: string[]
+  ) => {
+    // 過濾掉已顯示的項目
+    const availableData = allData.filter(
+      (item) => !excludeNumbers.includes(item.formattedNumber)
+    );
+
+    // 如果可用資料少於3個，則全部顯示
+    if (availableData.length <= 3) {
+      setMoreData(availableData);
+      return;
+    }
+
+    // 隨機選擇3個項目
+    const randomData: ParsedSheetData[] = [];
+    const tempData = [...availableData]; // 創建副本以避免修改原始資料
+
+    for (let i = 0; i < 3; i++) {
+      if (tempData.length === 0) break;
+
+      // 生成隨機索引
+      const randomIndex = Math.floor(Math.random() * tempData.length);
+
+      // 添加到結果並從臨時數組中移除
+      randomData.push(tempData[randomIndex]);
+      tempData.splice(randomIndex, 1);
+    }
+
+    setMoreData(randomData);
+  };
   const downloadVideo = (url: string, name: string) => {
     let corsanywhere = "https://mscors-anywhwere.kilokingw.workers.dev/?";
     const fileName = name;
@@ -512,41 +561,28 @@ function App() {
     const updateHeight = () => {
       if (videoRef.current) {
         const height = videoRef.current.offsetHeight;
-        console.log("Current video height:", height);
         if (height > 0) {
           setVideoHeight(height);
         }
       }
     };
 
-    // 多次檢查以確保獲取到正確高度
-    const checkHeight = () => {
-      updateHeight();
-      if (!videoHeight || videoHeight === 0) {
-        setTimeout(checkHeight, 100);
-      }
-    };
+    // 只在組件掛載和視窗大小變化時更新高度
+    updateHeight();
 
-    checkHeight();
+    // 設置一個定時器，確保在DOM完全渲染後再次嘗試獲取高度
+    const timer = setTimeout(() => {
+      updateHeight();
+    }, 500);
 
     // 監聽視窗大小變化
     window.addEventListener("resize", updateHeight);
 
-    // MutationObserver 監聽元素變化
-    const observer = new MutationObserver(updateHeight);
-    if (videoRef.current) {
-      observer.observe(videoRef.current, {
-        attributes: true,
-        childList: true,
-        subtree: true,
-      });
-    }
-
     return () => {
       window.removeEventListener("resize", updateHeight);
-      observer.disconnect();
+      clearTimeout(timer);
     };
-  }, [videoHeight]);
+  }, []); // 只在組件掛載時執行一次
 
   if (loading)
     return (
@@ -781,14 +817,14 @@ function App() {
 
       {/* Intro Section */}
       <section className="py-[30%] md:py-[12%] bg-white text-center relative  -mt-[2px] z-10">
-        <div
-          className="flex flex-col items-center justify-center mb-15 md:mb-0 -mt-[5%] md:-mt-[0%] "
-          data-aos="fade-up"
-          data-aos-duration="1300"
-          data-aos-delay="200"
-        >
+        <div className="flex flex-col items-center justify-center mb-15 md:mb-0 -mt-[5%] md:-mt-[0%] ">
           {data.length > 0 ? (
-            <h2 className="text-3xl md:text-4xl font-bold">
+            <h2
+              className="text-3xl md:text-4xl font-bold"
+              data-aos="fade-up"
+              data-aos-duration="1300"
+              data-aos-delay="200"
+            >
               {language &&
                 replaceTitle(
                   languageArray[language].standard_word,
@@ -802,77 +838,42 @@ function App() {
               {language && languageArray[language].noData}
             </h2>
           )}
+          <div
+            className="text-lg md:text-xl text-center w-11/12 mx-auto mt-4"
+            data-aos="fade-up"
+            data-aos-duration="1300"
+            data-aos-delay="200"
+          >
+            {language && languageArray[language].story}
+          </div>
         </div>
       </section>
-      <section className="relative pb-[50%] md:pb-[30%]  md:mt-[10%]  ">
+      <section className="relative pb-[0%] md:pb-[30%]  md:mt-[10%]  ">
         {/* Itinerary Sections */}
-        {data.map((item, index) => {
-          const currentStyle =
-            styleArray.find((style) => style.name === item.category) ||
-            styleArray[0];
+        {data.length > 0 &&
+          data.map((item, index) => {
+            const currentStyle =
+              styleArray.find((style) => style.name === item.category) ||
+              styleArray[0];
 
-          return (
-            <section
-              key={item.number + index}
-              className="pb-[45%] md:pb-[25%] lg:pb-[28%]  max-w-full mx-auto relative -mt-[45%]  md:-mt-[17%]"
-              style={{
-                background: currentStyle.gradient,
-              }}
-            >
-              <Wave06 position={"relative"} sceneStyle={currentStyle.style} />
-              <Wave08
-                position={"absolute top-[50%] md:top-[30%] left-0"}
-                sceneStyle={currentStyle.style}
-              />
+            return (
+              <section
+                key={"sheetdata" + item.number + index}
+                className="pb-[45%] md:pb-[25%] lg:pb-[28%]  max-w-full mx-auto relative -mt-[45%]  md:-mt-[17%]"
+                style={{
+                  background: currentStyle.gradient,
+                }}
+              >
+                <Wave06 position={"relative"} sceneStyle={currentStyle.style} />
+                <Wave08
+                  position={"absolute top-[50%] md:top-[30%] left-0"}
+                  sceneStyle={currentStyle.style}
+                />
 
-              <div className="w-10/12 md:w-8/12   mx-auto relative flex flex-col md:flex-row  items-stretch justify-center md:items-stretch md:gap-[7%] ">
-                <div className="w-full md:w-1/2  ">
-                  <h2
-                    className="text-2xl md:text-3xl font-bold mb- text-center flex flex-row items-center justify-between gap-2 px-[6px]"
-                    data-aos="fade-down"
-                    data-aos-duration="1300"
-                    data-aos-delay="200"
-                  >
-                    <span>0{index + 1}</span>
-                    <div className="text-right">
-                      {language === "jp"
-                        ? item.name_jp
-                        : language === "en"
-                        ? item.name_en
-                        : item.name_zh}
-                    </div>
-                  </h2>
-                  <div className="flex flex-col h-full">
-                    {item.videoname && (
-                      <div ref={videoRef} className="video-container">
-                        <VideoPlayer
-                          videoUrl={`${videoDomain}/${item.videoname}`}
-                        />
-                      </div>
-                    )}
-                    <div className="w-full  mt-4  md:mt-auto h-12 flex items-center justify-center ">
-                      <img
-                        src="./images/dlbtn.png"
-                        alt=""
-                        className="w-[35px]"
-                        onClick={() =>
-                          downloadVideo(
-                            `${videoDomain}/${item.videoname}`,
-                            item.videoname
-                          )
-                        }
-                        data-aos="fade"
-                        data-aos-duration="1300"
-                        data-aos-delay="200"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="w-full md:w-1/2    ">
-                  {!isMobile && (
+                <div className="w-10/12 md:w-8/12   mx-auto relative flex flex-col md:flex-row  items-stretch justify-center md:items-stretch md:gap-[7%] ">
+                  <div className="w-full md:w-1/2  ">
                     <h2
-                      className="text-2xl md:text-3xl font-bold mb- text-center flex flex-row items-center justify-between gap-2 px-[6px] text-transparent"
+                      className="text-2xl md:text-3xl font-bold mb- text-center flex flex-row items-center justify-between gap-2 px-[6px]"
                       data-aos="fade-down"
                       data-aos-duration="1300"
                       data-aos-delay="200"
@@ -886,62 +887,132 @@ function App() {
                           : item.name_zh}
                       </div>
                     </h2>
-                  )}
-                  <div
-                    className=" flex flex-col h-full justify-between  leading-8 text-[#1E1E1E] px-1 md:text-[18px] md:leading-8  md:tracking-wider "
-                    data-aos="fade-up"
-                    data-aos-duration="1300"
-                    data-aos-delay="200"
-                  >
-                    <div className="md:aspect-square w-full  mt-4">
-                      <div
-                        className="w-full max-w-xl overflow-y-auto scrollbar"
-                        style={{
-                          height: isMobile
-                            ? "auto"
-                            : videoHeight
-                            ? `${videoHeight - 50}px`
-                            : "auto",
-                        }}
-                      >
-                        {language === "jp"
-                          ? item.desc_jp
-                          : language === "en"
-                          ? item.desc_en
-                          : item.desc_zh}
+                    <div className="flex flex-col h-full">
+                      {item.videoname && (
+                        <div ref={videoRef} className="video-container">
+                          <VideoPlayer
+                            videoUrl={`${videoDomain}/${item.videoname}`}
+                          />
+                        </div>
+                      )}
+                      <div className="w-full  mt-4  md:mt-auto h-12 flex items-center justify-center ">
+                        <img
+                          src="./images/dlbtn.png"
+                          alt=""
+                          className="w-[35px]"
+                          onClick={() =>
+                            downloadVideo(
+                              `${videoDomain}/${item.videoname}`,
+                              item.videoname
+                            )
+                          }
+                          data-aos="fade"
+                          data-aos-duration="1300"
+                          data-aos-delay="200"
+                        />
                       </div>
                     </div>
+                  </div>
 
-                    <div className="w-full   mt-auto h-12 flex items-center ">
-                      <div
-                        className="text-sm  md:text-[16px]  text-left text-[#1E1E1E]"
-                        data-aos="fade-up"
+                  <div className="w-full md:w-1/2    ">
+                    {!isMobile && (
+                      <h2
+                        className="text-2xl md:text-3xl font-bold mb- text-center flex flex-row items-center justify-between gap-2 px-[6px] text-transparent"
+                        data-aos="fade-down"
                         data-aos-duration="1300"
                         data-aos-delay="200"
                       >
-                        {language && languageArray[language].resource}{" "}
-                        {language === "jp"
-                          ? item.auth_jp
-                          : language === "en"
-                          ? item.auth_en
-                          : item.auth_zh}
+                        <span>0{index + 1}</span>
+                        <div className="text-right">
+                          {language === "jp"
+                            ? item.name_jp
+                            : language === "en"
+                            ? item.name_en
+                            : item.name_zh}
+                        </div>
+                      </h2>
+                    )}
+                    <div
+                      className=" flex flex-col h-full justify-between  leading-8 text-[#1E1E1E] px-1 md:text-[18px] md:leading-8  md:tracking-wider "
+                      data-aos="fade-up"
+                      data-aos-duration="1300"
+                      data-aos-delay="200"
+                    >
+                      <div className="md:aspect-square w-full  mt-4">
+                        <div
+                          className="w-full max-w-xl overflow-y-auto scrollbar"
+                          style={{
+                            height: isMobile
+                              ? "auto"
+                              : videoHeight
+                              ? `${videoHeight - 50}px`
+                              : "auto",
+                          }}
+                        >
+                          {language === "jp"
+                            ? item.desc_jp
+                            : language === "en"
+                            ? item.desc_en
+                            : item.desc_zh}
+                        </div>
+                      </div>
+
+                      <div className="w-full   mt-auto h-12 flex items-center ">
+                        <div
+                          className="text-sm  md:text-[16px]  text-left text-[#1E1E1E]"
+                          data-aos="fade-up"
+                          data-aos-duration="1300"
+                          data-aos-delay="200"
+                        >
+                          {language && languageArray[language].resource}{" "}
+                          {language === "jp"
+                            ? item.auth_jp
+                            : language === "en"
+                            ? item.auth_en
+                            : item.auth_zh}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </section>
-          );
-        })}
+              </section>
+            );
+          })}
+      </section>
+      <section className="relative  z-0   ">
         <Wave05
           position={
-            "absolute bottom-[3%] sm:bottom-[4%] md:bottom-[5%] lg:bottom-[8%] left-0"
+            "absolute   left-0 -z-10 h-[250px] md:h-[300px] -mt-[25%]   "
           }
         />
+        <div className=" text-2xl md:text-2xl font-bold w-10/12 mx-auto">
+          {language && languageArray[language].more}
+          <div className="flex flex-col gap-2 mt-4">
+            {moreData.length > 0 &&
+              moreData.map((item, index) => {
+                return (
+                  <div key={"recommend" + item.number + index}>
+                    <div
+                      className="text-right"
+                      data-aos="fade-down"
+                      data-aos-duration="1300"
+                      data-aos-delay={`${index * 200}`}
+                    >
+                      {language === "jp"
+                        ? item.name_jp
+                        : language === "en"
+                        ? item.name_en
+                        : item.name_zh}
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
       </section>
 
       {/* Footer */}
-      <footer className=" text-center   relative -mt-[20%] md:-mt-[20%] lg:-mt-[10%] pt-[10%] ">
+      <footer className=" text-center   relative mt-[20%] md:-mt-[20%] lg:-mt-[10%] pt-[10%] ">
         <div className="w-full  bg-gradient-to-t from-[#73C5F3] via-[#43ADE9]  to-[#0D90DD] h-[100vh] md:h-[100vh] relative">
           {/* <img
             src="./images/footer_top.png"
