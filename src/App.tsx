@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, memo } from "react";
 import {
   fetchJsonData,
   fetchXXJsonData,
@@ -572,7 +572,7 @@ function App() {
     }, 1500);
   };
 
-  // 修復後的 VideoPlayer 組件
+  // 修復後的 VideoPlayer 組件 - 支持多個影片
   const VideoPlayer = ({
     videoUrl,
     index = 0,
