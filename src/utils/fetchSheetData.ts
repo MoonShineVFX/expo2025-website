@@ -159,3 +159,11 @@ export async function fetchXXJsonData() {
   const data = await response.json();
   return data;
 }
+
+//fetch json api https://r2web.expo2025-techworld-travel.com/static.json
+export async function fetchStaticJsonData() {
+  const url = "https://r2web.expo2025-techworld-travel.com/static.json";
+  const response = await fetch(url);
+  const data = await response.json();
+  return data;
+}

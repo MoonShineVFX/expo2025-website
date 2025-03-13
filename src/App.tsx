@@ -1,6 +1,10 @@
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import { fetchJsonData, fetchXXJsonData } from "./utils/fetchSheetData";
+import {
+  fetchJsonData,
+  fetchXXJsonData,
+  fetchStaticJsonData,
+} from "./utils/fetchSheetData";
 import ChartLayers from "./components/ChartLayers";
 import Wave05 from "./components/Wave05";
 import Wave06 from "./components/Wave06";
@@ -55,6 +59,13 @@ interface DecryptResponse {
   c: string;
 }
 
+interface StaticData {
+  key: string;
+  jp: string;
+  en: string;
+  zh: string;
+}
+
 function App() {
   const isMobile = useMobile();
   const [searchParams] = useSearchParams();
@@ -73,7 +84,7 @@ function App() {
   const lastScrollY = useRef(0);
   const [languageArray, setLanguageArray] = useState({
     jp: {
-      title: "この美しい島を\n共有する機会をくださり、\n感謝します。",
+      intro_title: "",
       noData: "現在、予定されている行程はありません。",
       dataDesc: "あなたの3つの旅程おすすめ。",
       webTitle: "EXPO 2025 TechWorld Travel",
@@ -87,11 +98,11 @@ function App() {
       life: "生命",
       future: "未来",
       story: "",
-      more: "あなたの体験に基づいて、こちらもおすすめします…",
+      journey_title: "",
+      more: "",
     },
     en: {
-      title:
-        "Thank you so much\nfor giving us the opportunity\nto share this beautiful island.",
+      intro_title: "",
       noData: "There are currently no itineraries.",
       dataDesc: "Your three itinerary recommendations.",
       webTitle: "EXPO 2025 TechWorld Travel",
@@ -105,10 +116,11 @@ function App() {
       life: "LIFE",
       future: "FUTURE",
       story: "",
-      more: "Based on your experience, we also recommend…",
+      journey_title: "",
+      more: "",
     },
     zh: {
-      title: "非常感謝您\n讓我們有機會分享\n這個美麗的島嶼。",
+      intro_title: "",
       noData: "目前沒有任何行程",
       dataDesc: "您的3套行程推薦",
       webTitle: "EXPO 2025 TechWorld Travel",
@@ -122,7 +134,8 @@ function App() {
       life: "生命",
       future: "未來",
       story: "",
-      more: "根據您的體驗，推薦給您的還有…",
+      journey_title: "",
+      more: "",
     },
   });
 
@@ -152,6 +165,32 @@ function App() {
         "linear-gradient(0deg, #7CD8F0 0%, #7CD8F050 12%, #ffffff00 100%)",
     },
   ];
+  // 新增一個函數來更新 languageArray
+  const updateLanguageArrayFromStaticData = (staticData: StaticData[]) => {
+    console.log("staticData:", staticData);
+    console.log("languageArray:", languageArray);
+    // 創建一個新的物件來存儲更新後的值
+    const updatedLanguageArray = {
+      jp: { ...languageArray.jp },
+      en: { ...languageArray.en },
+      zh: { ...languageArray.zh },
+    };
+
+    // 遍歷 staticData
+    staticData.forEach((item) => {
+      const key = item.key;
+
+      // 更新各語言的值
+      if (item.jp) (updatedLanguageArray.jp as any)[key] = item.jp;
+      if (item.en) (updatedLanguageArray.en as any)[key] = item.en;
+      if (item.zh) (updatedLanguageArray.zh as any)[key] = item.zh;
+    });
+    console.log("updatedLanguageArray:", updatedLanguageArray);
+
+    // 更新 state
+    setLanguageArray(updatedLanguageArray);
+  };
+
   useEffect(() => {
     setTimeout(function () {
       AOS.init({});
@@ -185,10 +224,34 @@ function App() {
         setLoading(true);
         const sheetData = await fetchJsonData();
         const categoryData = await fetchXXJsonData();
+        const staticData = await fetchStaticJsonData();
+        updateLanguageArrayFromStaticData(staticData);
         const code = searchParams.get("code");
         let vParam = "";
         let pParam = "";
         let cParam = "";
+
+        //staticData 的 key 為 intro,journeytitle,more
+        // [
+        //   {
+        //   "key": "intro_title",
+        //   "jp": "この美しい島を\n共有する機会をくださり、\n感謝します。",
+        //   "en": "Thank you so much\nfor giving us the opportunity\nto share this beautiful island.",
+        //   "zh": "非常感謝您\n讓我們有機會分享\n這個美麗的島嶼。"
+        //   },
+        //   {
+        //   "key": "journey_title",
+        //   "jp": "あなたのtitleの旅",
+        //   "en": "Your Journey of title",
+        //   "zh": "您的title之旅"
+        //   },
+        //   {
+        //   "key": "more",
+        //   "jp": "あなたの体験に基づいて、こちらもおすすめします…",
+        //   "en": "Based on your experience, we also recommend…",
+        //   "zh": "根據您的體驗，推薦給您的還有…"
+        //   }
+        //   ]
 
         if (code) {
           try {
@@ -778,14 +841,14 @@ function App() {
               className={`flex flex-col md:flex-row items-center justify-center `}
             >
               <motion.div
-                key={language && languageArray[language].title}
+                key={language && languageArray[language].intro_title}
                 className="flex flex-col md:flex-row items-center md:items-start justify-center tracking-widest w-full md:w-[500px]"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 0.5 }}
               >
                 <p className="text-xl md:text-3xl mb-2 text-white whitespace-pre-wrap text-left   leading-12 md:leading-16 md:tracking-widest">
-                  {language && languageArray[language].title}
+                  {language && languageArray[language].intro_title}
                 </p>
               </motion.div>
 
@@ -850,7 +913,7 @@ function App() {
             >
               {language &&
                 replaceTitle(
-                  languageArray[language].standard_word,
+                  languageArray[language].journey_title,
                   languageArray[language].color_word,
                   languageArray[language].font_color,
                   language
