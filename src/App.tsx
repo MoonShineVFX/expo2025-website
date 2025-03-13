@@ -337,9 +337,14 @@ function App() {
 
     setMoreData(randomData);
   };
+  const [downloadingVideo, setDownloadingVideo] = useState<string | null>(null);
+
   const downloadVideo = (url: string, name: string) => {
     let corsanywhere = "https://mscors-anywhwere.kilokingw.workers.dev/?";
     const fileName = name;
+
+    // 設置下載狀態為當前正在下載的視頻名稱
+    setDownloadingVideo(name);
 
     fetch(corsanywhere + url)
       .then((response) => {
@@ -364,8 +369,15 @@ function App() {
         // Clean up
         link.parentNode!.removeChild(link);
         window.URL.revokeObjectURL(downloadUrl);
+
+        // 重置下載狀態
+        setDownloadingVideo(null);
       })
-      .catch((err) => console.error("Error downloading video:", err));
+      .catch((err) => {
+        console.error("Error downloading video:", err);
+        // 發生錯誤時也要重置下載狀態
+        setDownloadingVideo(null);
+      });
   };
 
   //share this page url
@@ -906,21 +918,25 @@ function App() {
                           />
                         </div>
                       )}
-                      <div className="w-full  mt-4  md:mt-auto h-12 flex items-center justify-center ">
-                        <img
-                          src="./images/dlbtn.png"
-                          alt=""
-                          className="w-[35px]"
-                          onClick={() =>
-                            downloadVideo(
-                              `${videoDomain}/${item.videoname}`,
-                              item.videoname
-                            )
-                          }
-                          data-aos="fade"
-                          data-aos-duration="1300"
-                          data-aos-delay="200"
-                        />
+                      <div className="w-full mt-4 md:mt-auto h-12 flex items-center justify-center">
+                        {downloadingVideo === item.videoname ? (
+                          <div className="w-[35px] h-[35px] rounded-full border-2 border-gray-300 border-t-[#5AB9F1] animate-spin"></div>
+                        ) : (
+                          <img
+                            src="./images/dlbtn.png"
+                            alt=""
+                            className="w-[35px] cursor-pointer"
+                            onClick={() =>
+                              downloadVideo(
+                                `${videoDomain}/${item.videoname}`,
+                                item.videoname
+                              )
+                            }
+                            data-aos="fade"
+                            data-aos-duration="1300"
+                            data-aos-delay="200"
+                          />
+                        )}
                       </div>
                     </div>
                   </div>
