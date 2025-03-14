@@ -15,6 +15,8 @@ import Wave07 from "./components/Wave07";
 import Wave08 from "./components/Wave08";
 import useMobile from "./hooks/useMobile";
 import ReactPlayer from "react-player/lazy";
+import React from "react";
+import DownloadButton from "./components/DownloadButton";
 
 interface ParsedSheetData {
   number: number;
@@ -401,143 +403,6 @@ function App() {
 
     setMoreData(randomData);
   };
-  const [downloadingVideo, setDownloadingVideo] = useState<string | null>(null);
-
-  // 優化下載視頻函數，減少對視頻播放的影響
-  const downloadVideo = (url: string, name: string) => {
-    let corsanywhere = "https://mscors-anywhwere.kilokingw.workers.dev/?";
-    const fileName = name;
-
-    // 設置下載狀態為當前正在下載的視頻名稱
-    setDownloadingVideo(name);
-
-    // 使用 Web Worker 在後台線程中處理下載，避免阻塞主線程
-    if (window.Worker) {
-      // 創建一個 Blob，包含 Worker 代碼
-      const workerCode = `
-        self.onmessage = function(e) {
-          const { url, corsUrl } = e.data;
-          
-          // 使用 fetch 獲取視頻
-          fetch(corsUrl + url)
-            .then(response => {
-              if (!response.ok) {
-                throw new Error("Network response was not ok");
-              }
-              return response.blob();
-            })
-            .then(blob => {
-              // 將 blob 發送回主線程
-              self.postMessage({ status: 'success', blob: blob });
-            })
-            .catch(error => {
-              self.postMessage({ status: 'error', message: error.message });
-            });
-        };
-      `;
-
-      const workerBlob = new Blob([workerCode], {
-        type: "application/javascript",
-      });
-      const workerUrl = URL.createObjectURL(workerBlob);
-      const worker = new Worker(workerUrl);
-
-      // 監聽 Worker 的消息
-      worker.onmessage = function (e) {
-        const { status, blob, message } = e.data;
-
-        if (status === "success" && blob) {
-          const videoBlob = new Blob([blob], { type: "video/mp4" });
-          const downloadUrl = window.URL.createObjectURL(videoBlob);
-
-          // 創建下載鏈接
-          const link = document.createElement("a");
-          link.href = downloadUrl;
-          link.setAttribute("download", fileName);
-          document.body.appendChild(link);
-
-          // 觸發下載
-          link.click();
-
-          // 清理資源
-          setTimeout(() => {
-            if (link.parentNode) {
-              link.parentNode.removeChild(link);
-            }
-            window.URL.revokeObjectURL(downloadUrl);
-            window.URL.revokeObjectURL(workerUrl);
-
-            // 終止 Worker
-            worker.terminate();
-
-            // 重置下載狀態
-            setDownloadingVideo(null);
-            console.log("下載完成，已清理資源");
-          }, 1000);
-        } else {
-          console.error("Worker 錯誤:", message);
-          window.URL.revokeObjectURL(workerUrl);
-          worker.terminate();
-          setDownloadingVideo(null);
-        }
-      };
-
-      // 發送消息給 Worker 開始下載
-      worker.postMessage({ url, corsUrl: corsanywhere });
-
-      // 設置超時，如果 30 秒後仍未完成，重置狀態
-      const timeoutId = setTimeout(() => {
-        if (downloadingVideo === name) {
-          console.log("下載超時，重置狀態");
-          window.URL.revokeObjectURL(workerUrl);
-          worker.terminate();
-          setDownloadingVideo(null);
-        }
-      }, 30000);
-
-      // 返回清理函數
-      return () => {
-        clearTimeout(timeoutId);
-        window.URL.revokeObjectURL(workerUrl);
-        worker.terminate();
-      };
-    } else {
-      // 瀏覽器不支持 Web Worker，使用原始方法
-      console.log("瀏覽器不支持 Web Worker，使用標準方法下載");
-
-      // 在下載開始前先恢復按鈕狀態，減少對 UI 的影響
-      setTimeout(() => {
-        setDownloadingVideo(null);
-      }, 1500);
-
-      fetch(corsanywhere + url)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          return response.blob();
-        })
-        .then((blob) => {
-          const videoBlob = new Blob([blob], { type: "video/mp4" });
-          const downloadUrl = window.URL.createObjectURL(videoBlob);
-          const link = document.createElement("a");
-          link.href = downloadUrl;
-          link.setAttribute("download", fileName);
-          document.body.appendChild(link);
-          link.click();
-
-          setTimeout(() => {
-            if (link.parentNode) {
-              link.parentNode.removeChild(link);
-            }
-            window.URL.revokeObjectURL(downloadUrl);
-          }, 1000);
-        })
-        .catch((err) => {
-          console.error("Error downloading video:", err);
-        });
-    }
-  };
 
   //share this page url
   const sharePageUrl = async () => {
@@ -573,242 +438,238 @@ function App() {
   };
 
   // 修復後的 VideoPlayer 組件 - 支持多個影片
-  const VideoPlayer = ({
-    videoUrl,
-    index = 0,
-  }: {
-    videoUrl: string;
-    index?: number;
-  }) => {
-    const [isReady, setIsReady] = useState(false);
-    const [hasError, setHasError] = useState(false);
-    const [retryCount, setRetryCount] = useState(0);
-    const [isVisible, setIsVisible] = useState(false);
-    const [shouldPlay, setShouldPlay] = useState(false);
-    const playerRef = useRef<ReactPlayer>(null);
-    const containerRef = useRef<HTMLDivElement>(null);
-    const playTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const VideoPlayer = React.memo(
+    ({ videoUrl, index = 0 }: { videoUrl: string; index?: number }) => {
+      const [isReady, setIsReady] = useState(false);
+      const [hasError, setHasError] = useState(false);
+      const [retryCount, setRetryCount] = useState(0);
+      const [isVisible, setIsVisible] = useState(false);
+      const [shouldPlay, setShouldPlay] = useState(false);
+      const playerRef = useRef<ReactPlayer>(null);
+      const containerRef = useRef<HTMLDivElement>(null);
+      const playTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    // 處理播放器就緒
-    const handleReady = () => {
-      console.log(`視頻 ${index} 已就緒`);
-      setIsReady(true);
-      setHasError(false);
+      // 處理播放器就緒
+      const handleReady = () => {
+        console.log(`視頻 ${index} 已就緒`);
+        setIsReady(true);
+        setHasError(false);
 
-      // 如果視頻已經可見，設置延遲播放
-      if (isVisible) {
-        delayedPlay();
-      }
-    };
+        // 如果視頻已經可見，設置延遲播放
+        if (isVisible) {
+          delayedPlay();
+        }
+      };
 
-    // 處理播放器錯誤
-    const handleError = (error: any) => {
-      console.error(`視頻 ${index} 錯誤:`, error);
-      setHasError(true);
-      setIsReady(false);
-      setShouldPlay(false);
+      // 處理播放器錯誤
+      const handleError = (error: any) => {
+        console.error(`視頻 ${index} 錯誤:`, error);
+        setHasError(true);
+        setIsReady(false);
+        setShouldPlay(false);
 
-      // 如果錯誤次數少於3次，嘗試重新加載
-      if (retryCount < 3) {
-        setTimeout(() => {
-          console.log(`視頻 ${index} 嘗試重新加載，第 ${retryCount + 1} 次`);
-          setRetryCount((prev) => prev + 1);
+        // 如果錯誤次數少於3次，嘗試重新加載
+        if (retryCount < 3) {
           setTimeout(() => {
-            if (playerRef.current) {
-              playerRef.current.getInternalPlayer()?.load();
-            }
-          }, 300);
-        }, 1000);
-      }
-    };
-
-    // 延遲播放視頻的函數
-    const delayedPlay = useCallback(() => {
-      // 清除任何現有的計時器
-      if (playTimerRef.current) {
-        clearTimeout(playTimerRef.current);
-      }
-
-      // 設置新的計時器，一秒後播放
-      playTimerRef.current = setTimeout(() => {
-        console.log(`延遲播放視頻 ${index}`);
-        setShouldPlay(true);
-        playTimerRef.current = null;
-      }, 1000);
-    }, [index]);
-
-    // 暫停視頻的函數
-    const pauseVideo = useCallback(() => {
-      console.log(`暫停視頻 ${index}`);
-      setShouldPlay(false);
-
-      // 清除任何待執行的播放計時器
-      if (playTimerRef.current) {
-        clearTimeout(playTimerRef.current);
-        playTimerRef.current = null;
-      }
-    }, [index]);
-
-    // 使用 IntersectionObserver 監控視頻可見性
-    useEffect(() => {
-      if (!containerRef.current) return;
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            const nowVisible = entry.isIntersecting;
-
-            console.log(`視頻 ${index} ${nowVisible ? "進入" : "離開"}視圖`);
-            setIsVisible(nowVisible);
-
-            if (nowVisible) {
-              // 視頻進入視圖，延遲播放
-              if (isReady) {
-                delayedPlay();
+            console.log(`視頻 ${index} 嘗試重新加載，第 ${retryCount + 1} 次`);
+            setRetryCount((prev) => prev + 1);
+            setTimeout(() => {
+              if (playerRef.current) {
+                playerRef.current.getInternalPlayer()?.load();
               }
-            } else {
-              // 視頻離開視圖，暫停播放
-              pauseVideo();
-            }
-          });
-        },
-        { threshold: 0.3 }
-      );
+            }, 300);
+          }, 1000);
+        }
+      };
 
-      observer.observe(containerRef.current);
-
-      return () => {
-        observer.disconnect();
-        // 清理計時器
+      // 延遲播放視頻的函數
+      const delayedPlay = useCallback(() => {
+        // 清除任何現有的計時器
         if (playTimerRef.current) {
           clearTimeout(playTimerRef.current);
         }
-      };
-    }, [index, isReady, delayedPlay, pauseVideo]);
 
-    // 監聽視窗大小變化
-    useEffect(() => {
-      const handleResize = () => {
-        if (containerRef.current) {
-          const rect = containerRef.current.getBoundingClientRect();
-          const newIsVisible =
-            rect.top < window.innerHeight &&
-            rect.bottom > 0 &&
-            rect.left < window.innerWidth &&
-            rect.right > 0;
+        // 設置新的計時器，一秒後播放
+        playTimerRef.current = setTimeout(() => {
+          console.log(`延遲播放視頻 ${index}`);
+          setShouldPlay(true);
+          playTimerRef.current = null;
+        }, 1000);
+      }, [index]);
 
-          if (newIsVisible !== isVisible) {
-            setIsVisible(newIsVisible);
+      // 暫停視頻的函數
+      const pauseVideo = useCallback(() => {
+        console.log(`暫停視頻 ${index}`);
+        setShouldPlay(false);
 
-            if (newIsVisible && isReady) {
-              delayedPlay();
-            } else {
-              pauseVideo();
+        // 清除任何待執行的播放計時器
+        if (playTimerRef.current) {
+          clearTimeout(playTimerRef.current);
+          playTimerRef.current = null;
+        }
+      }, [index]);
+
+      // 使用 IntersectionObserver 監控視頻可見性
+      useEffect(() => {
+        if (!containerRef.current) return;
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              const nowVisible = entry.isIntersecting;
+
+              console.log(`視頻 ${index} ${nowVisible ? "進入" : "離開"}視圖`);
+              setIsVisible(nowVisible);
+
+              if (nowVisible) {
+                // 視頻進入視圖，延遲播放
+                if (isReady) {
+                  delayedPlay();
+                }
+              } else {
+                // 視頻離開視圖，暫停播放
+                pauseVideo();
+              }
+            });
+          },
+          { threshold: 0.3 }
+        );
+
+        observer.observe(containerRef.current);
+
+        return () => {
+          observer.disconnect();
+          // 清理計時器
+          if (playTimerRef.current) {
+            clearTimeout(playTimerRef.current);
+          }
+        };
+      }, [index, isReady, delayedPlay, pauseVideo]);
+
+      // 監聽視窗大小變化
+      useEffect(() => {
+        const handleResize = () => {
+          if (containerRef.current) {
+            const rect = containerRef.current.getBoundingClientRect();
+            const newIsVisible =
+              rect.top < window.innerHeight &&
+              rect.bottom > 0 &&
+              rect.left < window.innerWidth &&
+              rect.right > 0;
+
+            if (newIsVisible !== isVisible) {
+              setIsVisible(newIsVisible);
+
+              if (newIsVisible && isReady) {
+                delayedPlay();
+              } else {
+                pauseVideo();
+              }
             }
           }
-        }
-      };
+        };
 
-      window.addEventListener("resize", handleResize);
-      return () => window.removeEventListener("resize", handleResize);
-    }, [isVisible, isReady, delayedPlay, pauseVideo]);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+      }, [isVisible, isReady, delayedPlay, pauseVideo]);
 
-    // 當視頻URL變化時重置狀態
-    useEffect(() => {
-      setRetryCount(0);
-      setHasError(false);
-      setIsReady(false);
-      setShouldPlay(false);
+      // 當視頻URL變化時重置狀態
+      useEffect(() => {
+        setRetryCount(0);
+        setHasError(false);
+        setIsReady(false);
+        setShouldPlay(false);
 
-      if (playTimerRef.current) {
-        clearTimeout(playTimerRef.current);
-        playTimerRef.current = null;
-      }
-    }, [videoUrl]);
-
-    // 確保組件卸載時清理資源
-    useEffect(() => {
-      return () => {
         if (playTimerRef.current) {
           clearTimeout(playTimerRef.current);
+          playTimerRef.current = null;
         }
-        setShouldPlay(false);
-      };
-    }, []);
+      }, [videoUrl]);
 
-    // 調試用：監視 shouldPlay 狀態變化
-    useEffect(() => {
-      console.log(`視頻 ${index} shouldPlay 狀態變為: ${shouldPlay}`);
-    }, [shouldPlay, index]);
+      // 確保組件卸載時清理資源
+      useEffect(() => {
+        return () => {
+          if (playTimerRef.current) {
+            clearTimeout(playTimerRef.current);
+          }
+          setShouldPlay(false);
+        };
+      }, []);
 
-    return (
-      <div
-        ref={containerRef}
-        className="aspect-square w-full p-[6px] mt-4 relative"
-        style={{
-          backgroundImage: `url('./images/video_bg.png')`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-        data-aos="fade"
-        data-aos-duration="1300"
-        data-aos-delay="200"
-      >
-        {/* 顯示加載狀態 */}
-        {!isReady && !hasError && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/20 z-10">
-            <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-          </div>
-        )}
+      // 調試用：監視 shouldPlay 狀態變化
+      useEffect(() => {
+        console.log(`視頻 ${index} shouldPlay 狀態變為: ${shouldPlay}`);
+      }, [shouldPlay, index]);
 
-        {/* 顯示錯誤狀態 */}
-        {hasError && retryCount >= 3 ? (
-          <div className="w-full h-full flex items-center justify-center bg-black/10 z-10">
-            <p className="text-white text-sm">視頻無法播放</p>
-          </div>
-        ) : (
-          <div
-            className={`w-full h-full ${
-              !isReady ? "opacity-0" : "opacity-100"
-            } transition-opacity duration-300`}
-          >
-            <ReactPlayer
-              ref={playerRef}
-              url={videoUrl}
-              width="100%"
-              height="100%"
-              playing={shouldPlay}
-              loop={true}
-              muted={true}
-              playsinline={true}
-              onReady={handleReady}
-              onError={handleError}
-              onBuffer={() => console.log(`視頻 ${index} 緩衝中`)}
-              onBufferEnd={() => console.log(`視頻 ${index} 緩衝結束`)}
-              onPlay={() => console.log(`視頻 ${index} 開始播放`)}
-              onPause={() => console.log(`視頻 ${index} 已暫停`)}
-              onEnded={() => {
-                if (playerRef.current && shouldPlay) {
-                  playerRef.current.seekTo(0);
-                }
-              }}
-              config={{
-                file: {
-                  attributes: {
-                    controlsList: "nodownload nofullscreen noremoteplayback",
-                    disablePictureInPicture: true,
-                    className: "w-full h-full object-cover shadow-lg",
+      return (
+        <div
+          ref={containerRef}
+          className="aspect-square w-full p-[6px] mt-4 relative"
+          style={{
+            backgroundImage: `url('./images/video_bg.png')`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+          data-aos="fade"
+          data-aos-duration="1300"
+          data-aos-delay="200"
+        >
+          {/* 顯示加載狀態 */}
+          {!isReady && !hasError && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/20 z-10">
+              <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          )}
+
+          {/* 顯示錯誤狀態 */}
+          {hasError && retryCount >= 3 ? (
+            <div className="w-full h-full flex items-center justify-center bg-black/10 z-10">
+              <p className="text-white text-sm">視頻無法播放</p>
+            </div>
+          ) : (
+            <div
+              className={`w-full h-full ${
+                !isReady ? "opacity-0" : "opacity-100"
+              } transition-opacity duration-300`}
+            >
+              <ReactPlayer
+                ref={playerRef}
+                url={videoUrl}
+                width="100%"
+                height="100%"
+                playing={shouldPlay}
+                loop={true}
+                muted={true}
+                playsinline={true}
+                onReady={handleReady}
+                onError={handleError}
+                onBuffer={() => console.log(`視頻 ${index} 緩衝中`)}
+                onBufferEnd={() => console.log(`視頻 ${index} 緩衝結束`)}
+                onPlay={() => console.log(`視頻 ${index} 開始播放`)}
+                onPause={() => console.log(`視頻 ${index} 已暫停`)}
+                onEnded={() => {
+                  if (playerRef.current && shouldPlay) {
+                    playerRef.current.seekTo(0);
+                  }
+                }}
+                config={{
+                  file: {
+                    attributes: {
+                      controlsList: "nodownload nofullscreen noremoteplayback",
+                      disablePictureInPicture: true,
+                      className: "w-full h-full object-cover shadow-lg",
+                    },
+                    forceVideo: true,
                   },
-                  forceVideo: true,
-                },
-              }}
-              style={{ objectFit: "cover" }}
-            />
-          </div>
-        )}
-      </div>
-    );
-  };
+                }}
+                style={{ objectFit: "cover" }}
+              />
+            </div>
+          )}
+        </div>
+      );
+    }
+  );
 
   const replaceTitle = (
     standard_word: string,
@@ -1228,23 +1089,10 @@ function App() {
                           />
                         </div>
                       )}
-                      <div className="w-full mt-4 md:mt-auto h-12 flex items-center justify-center">
-                        {downloadingVideo === item.videoname ? (
-                          <div className="w-[35px] h-[35px] rounded-full border-2 border-gray-300 border-t-[#5AB9F1] animate-spin"></div>
-                        ) : (
-                          <img
-                            src="./images/dlbtn.png"
-                            alt=""
-                            className="w-[35px] cursor-pointer"
-                            onClick={() =>
-                              downloadVideo(
-                                `${videoDomain}/${item.videoname}`,
-                                item.videoname
-                              )
-                            }
-                          />
-                        )}
-                      </div>
+                      <DownloadButton
+                        videoUrl={`${videoDomain}/${item.videoname}`}
+                        fileName={item.videoname}
+                      />
                     </div>
                   </div>
 
