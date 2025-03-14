@@ -858,7 +858,7 @@ function App() {
                       : "text-white hover:bg-white hover:text-[#5AB9F1]"
                   }`}
                 >
-                  JP
+                  日
                 </button>
                 <button
                   onClick={() => handleLanguageChange("en")}
@@ -878,7 +878,7 @@ function App() {
                       : "text-white hover:bg-white hover:text-[#5AB9F1]"
                   }`}
                 >
-                  ZH
+                  繁
                 </button>
               </div>
               <div className="text-white text-2xl mt-2 tracking-widest "></div>
@@ -905,7 +905,7 @@ function App() {
                       : "text-white hover:bg-white hover:text-[#5AB9F1]"
                   }`}
                 >
-                  JP
+                  日
                 </button>
                 <button
                   onClick={() => handleLanguageChange("en")}
@@ -925,7 +925,7 @@ function App() {
                       : "text-white hover:bg-white hover:text-[#5AB9F1]"
                   }`}
                 >
-                  ZH
+                  繁
                 </button>
               </div>
               <div className="text-white text-2xl mt-2 tracking-widest "></div>
