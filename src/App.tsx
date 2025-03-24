@@ -18,6 +18,7 @@ import useMobile from "./hooks/useMobile";
 // import React from "react";
 import VideoPlayerV1 from "./components/VideopPlayerV1";
 import DownloadButton from "./components/DownloadButton";
+// import VideoPlayerV2 from "./components/VideoPlayerV2";
 
 interface ParsedSheetData {
   number: number;
@@ -74,7 +75,7 @@ function App() {
   const isMobile = useMobile();
   const [searchParams] = useSearchParams();
   const [data, setData] = useState<ParsedSheetData[]>([]);
-  const [moreData, setMoreData] = useState<ParsedSheetData[]>([]);
+  // const [moreData, setMoreData] = useState<ParsedSheetData[]>([]);
   const [currentStyle, setCurrentStyle] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -380,7 +381,7 @@ function App() {
     // 如果可用資料少於3個，則全部顯示
     if (availableData.length <= 3) {
       console.log("可用資料少於3個，顯示全部:", availableData.length);
-      setMoreData(availableData);
+      // setMoreData(availableData);
       return;
     }
 
@@ -402,7 +403,7 @@ function App() {
       tempData.splice(randomIndex, 1);
     }
 
-    setMoreData(randomData);
+    // setMoreData(randomData);
   };
 
   //share this page url
@@ -777,6 +778,13 @@ function App() {
       {/* Intro Section */}
       <section className="py-[30%] md:py-[12%] bg-white text-center relative  -mt-[2px] z-10">
         <div className="flex flex-col items-center justify-center mb-15 md:mb-0 -mt-[5%] md:-mt-[0%] ">
+          {/* <div className="w-full max-w-lg mx-auto">
+            <VideoPlayerV2
+              src="https://videos.expo2025-techworld-travel.com/HLS/BW_Life_0012_D/BW_Life_0012_D.m3u8" // HLS 測試串流
+              controls={true}
+              muted={true}
+            />
+          </div> */}
           {data.length > 0 ? (
             <h2
               className="text-3xl md:text-4xl font-bold"
@@ -934,7 +942,7 @@ function App() {
             "absolute   left-0 -z-10 h-[250px] md:h-[320px] -mt-[33%] md:-mt-[22%]   "
           }
         />
-        <div className="   w-10/12 md:w-6/12 mx-auto my-[10%] md:my-[5%] ">
+        {/* <div className="   w-10/12 md:w-6/12 mx-auto my-[10%] md:my-[5%] ">
           <div className="text-lg md:text-xl">
             {language && languageArray[language].more}
           </div>
@@ -959,7 +967,7 @@ function App() {
                 );
               })}
           </div>
-        </div>
+        </div> */}
       </section>
 
       {/* Footer */}
