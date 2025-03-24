@@ -18,7 +18,7 @@ import useMobile from "./hooks/useMobile";
 // import React from "react";
 import VideoPlayerV1 from "./components/VideopPlayerV1";
 import DownloadButton from "./components/DownloadButton";
-// import VideoPlayerV2 from "./components/VideoPlayerV2";
+import VideoPlayerV2 from "./components/VideoPlayerV2";
 
 interface ParsedSheetData {
   number: number;
@@ -856,13 +856,21 @@ function App() {
                     </h2>
                     <div className="flex flex-col h-full">
                       {item.videoname && (
-                        <div ref={videoRef} className="video-container">
-                          <VideoPlayerV1
-                            key={`${item.videoname}-${index}`}
-                            videoUrl={`${videoDomain}/${item.videoname}`}
-                            index={index}
-                          />
-                        </div>
+                        // <div ref={videoRef} className="video-container">
+                        //   <VideoPlayerV1
+                        //     key={`${item.videoname}-${index}`}
+                        //     videoUrl={`${videoDomain}/${item.videoname}`}
+                        //     index={index}
+                        //   />
+                        // </div>
+                        <VideoPlayerV2
+                          src={`https://videos.expo2025-techworld-travel.com/HLS/${item.videoname.replace(
+                            ".mp4",
+                            ""
+                          )}/${item.videoname.replace(".mp4", "")}.m3u8`}
+                          controls={false}
+                          muted={true}
+                        />
                       )}
                       <DownloadButton
                         videoUrl={`${videoDomain}/${item.videoname}`}

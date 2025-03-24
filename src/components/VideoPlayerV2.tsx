@@ -169,8 +169,19 @@ const VideoPlayerV2 = ({
   }, []);
 
   return (
-    <div ref={containerRef} data-vjs-player>
-      <video ref={videoRef} className={className} playsInline />
+    <div
+      className="aspect-square w-full p-[6px] mt-4 relative"
+      style={{
+        backgroundImage: poster
+          ? `url(${poster})`
+          : `url('./images/video_bg.png')`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <div ref={containerRef} data-vjs-player>
+        <video ref={videoRef} className={className} playsInline />
+      </div>
     </div>
   );
 };
