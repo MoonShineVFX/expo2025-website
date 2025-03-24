@@ -16,7 +16,7 @@ import Wave08 from "./components/Wave08";
 import useMobile from "./hooks/useMobile";
 // import ReactPlayer from "react-player/lazy";
 // import React from "react";
-import VideoPlayerV1 from "./components/VideopPlayerV1";
+// import VideoPlayerV1 from "./components/VideopPlayerV1";
 import DownloadButton from "./components/DownloadButton";
 import VideoPlayerV2 from "./components/VideoPlayerV2";
 
