@@ -947,7 +947,7 @@ function App() {
       <section className="relative  z-0 md:mb-[10%]  ">
         <Wave05
           position={
-            "absolute   left-0 -z-10 h-[250px] md:h-[320px] -mt-[33%] md:-mt-[22%]   "
+            "absolute   left-0 -z-10 h-[250px] md:h-[320px] -mt-[33%] md:-mt-[20%]   "
           }
         />
         {/* <div className="   w-10/12 md:w-6/12 mx-auto my-[10%] md:my-[5%] ">
