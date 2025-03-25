@@ -148,16 +148,17 @@ function App() {
     {
       id: 1,
       style: "s1",
-      name: "自然",
-      color: "#37AFBC",
+      name: "生命",
+      color: "#F481B1",
       gradient:
         "linear-gradient(0deg, #4FCAD8 0%, #f3feff50 12%, #ffffff00 100%)",
     },
     {
       id: 2,
       style: "s2",
-      name: "生命",
-      color: "#F481B1",
+      name: "自然",
+      color: "#37AFBC",
+
       gradient:
         "linear-gradient(0deg, #ffd1e4 0%, #fff4f950 12%, #ffffff00 100%)",
     },
@@ -235,28 +236,6 @@ function App() {
         let vParam = "";
         let pParam = "";
         let cParam = "";
-
-        //staticData 的 key 為 intro,journeytitle,more
-        // [
-        //   {
-        //   "key": "intro_title",
-        //   "jp": "この美しい島を\n共有する機会をくださり、\n感謝します。",
-        //   "en": "Thank you so much\nfor giving us the opportunity\nto share this beautiful island.",
-        //   "zh": "非常感謝您\n讓我們有機會分享\n這個美麗的島嶼。"
-        //   },
-        //   {
-        //   "key": "journey_title",
-        //   "jp": "あなたのtitleの旅",
-        //   "en": "Your Journey of title",
-        //   "zh": "您的title之旅"
-        //   },
-        //   {
-        //   "key": "more",
-        //   "jp": "あなたの体験に基づいて、こちらもおすすめします…",
-        //   "en": "Based on your experience, we also recommend…",
-        //   "zh": "根據您的體驗，推薦給您的還有…"
-        //   }
-        //   ]
 
         if (code) {
           try {
