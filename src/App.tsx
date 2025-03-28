@@ -959,7 +959,7 @@ function App() {
 
       {/* Footer */}
       <footer className=" text-center   relative mt-[20%] md:-mt-[20%] lg:-mt-[10%] pt-[10%] ">
-        <div className="w-full  bg-gradient-to-t from-[#73C5F3] via-[#43ADE9]  to-[#0D90DD] h-[60vh] md:h-[60vh] relative">
+        <div className="w-full  bg-gradient-to-t from-[#73C5F3] via-[#43ADE9]  to-[#0D90DD] h-[25vh] md:h-[35vh] relative">
           {/* <img
             src="./images/footer_top.png"
             alt="logo"
