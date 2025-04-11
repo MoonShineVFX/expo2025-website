@@ -4,6 +4,7 @@ interface Values {
   life: number;
   future: number;
   nature: number;
+  updated_at: string;
 }
 
 const Status = () => {
@@ -53,12 +54,17 @@ const Status = () => {
         <span>Life</span>
       </p>
       <p className="flex flex-col justify-center items-center">
+        <span className="text-2xl font-bold ">{values?.nature}</span>
+        <span>Nature</span>
+      </p>
+      <p className="flex flex-col justify-center items-center">
         <span className="text-2xl font-bold ">{values?.future}</span>
         <span>Future</span>
       </p>
-      <p className="flex flex-col justify-center items-center">
-        <span className="text-2xl font-bold ">{values?.nature}</span>
-        <span>Nature</span>
+      <p className="flex justify-center items-center">
+        <span className="text-sm tracking-wide">
+          Updated at {values?.updated_at}
+        </span>{" "}
       </p>
     </div>
   );
