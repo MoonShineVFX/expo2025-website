@@ -712,7 +712,10 @@ function HomePage() {
                 transition={{ duration: 1, delay: 1 }}
               >
                 <div className="w-10/12 mx-auto h-full relative my-[8%]">
-                  <img src="./images/charts2/bg01.svg" alt="logo" />
+                  <img
+                    src="https://r2.web.moonshine.tw/msweb/expo2025/images/charts2/bg01.svg"
+                    alt="logo"
+                  />
                   {showContent && (
                     <ChartLayers pink={p1} green={p2} blue={p3} />
                   )}
@@ -961,7 +964,8 @@ function HomePage() {
           <div
             className="w-[100%]  h-[30px] z-0  -mt-[1%]  drop-shadow-[0_10px_4px_rgba(0,0,0,0.1)] bg-[450px_auto] md:bg-[700px_auto]  "
             style={{
-              backgroundImage: "url('./images/footer_wave02.svg')",
+              backgroundImage:
+                "url('https://r2.web.moonshine.tw/msweb/expo2025/images/footer_wave02.svg')",
               backgroundRepeat: "repeat-x",
 
               backgroundPosition: "bottom",
@@ -976,7 +980,7 @@ function HomePage() {
               data-aos-delay="200"
             >
               <img
-                src="./images/sharebtn.png"
+                src="https://r2.web.moonshine.tw/msweb/expo2025/images/sharebtn.png"
                 alt=""
                 className="w-[35px]"
                 onClick={sharePageUrl}
@@ -988,7 +992,7 @@ function HomePage() {
               <div className="w-full    relative flex justify-between border-t border-white/50 pt-[20px]">
                 <div className=" cursor-pointer">
                   <img
-                    src="./images/sharebtn.svg"
+                    src="https://r2.web.moonshine.tw/msweb/expo2025/images/sharebtn.svg"
                     alt="logo"
                     className="w-[35px]"
                     onClick={sharePageUrl}
@@ -996,7 +1000,7 @@ function HomePage() {
                 </div>
                 <div className=" cursor-pointer">
                   <img
-                    src="./images/topbtn.svg"
+                    src="https://r2.web.moonshine.tw/msweb/expo2025/images/topbtn.svg"
                     alt="logo"
                     className="w-[45px]"
                     onClick={() => {

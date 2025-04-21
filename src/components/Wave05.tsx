@@ -23,7 +23,7 @@ const Wave05 = ({ position }: { position: string }) => {
             delay: -1,
           }}
           style={{
-            backgroundImage: `url('./images/footer_wave01.svg')`,
+            backgroundImage: `url('https://r2.web.moonshine.tw/msweb/expo2025/images/footer_wave01.svg')`,
             backgroundRepeat: "repeat-x",
             backgroundSize: "700px auto",
             backgroundPosition: "bottom ",

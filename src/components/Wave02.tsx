@@ -32,7 +32,8 @@ const Wave02 = ({
             delay: -1,
           }}
           style={{
-            backgroundImage: "url('./images/wave3_04.svg')",
+            backgroundImage:
+              "url('https://r2.web.moonshine.tw/msweb/expo2025/images/wave3_04.svg')",
             backgroundRepeat: "repeat-x",
             backgroundSize: "55% auto",
             backgroundPosition: "bottom",
@@ -55,7 +56,8 @@ const Wave02 = ({
             delay: -2,
           }}
           style={{
-            backgroundImage: "url('./images/wave3_03.svg')",
+            backgroundImage:
+              "url('https://r2.web.moonshine.tw/msweb/expo2025/images/wave3_03.svg')",
             backgroundRepeat: "repeat-x",
             backgroundSize: "55% auto",
             backgroundPosition: "bottom",
@@ -76,7 +78,8 @@ const Wave02 = ({
             delay: -3,
           }}
           style={{
-            backgroundImage: "url('./images/wave3_02.svg')",
+            backgroundImage:
+              "url('https://r2.web.moonshine.tw/msweb/expo2025/images/wave3_02.svg')",
             backgroundRepeat: "repeat-x",
             backgroundSize: "55% auto",
             backgroundPosition: "bottom",
@@ -98,7 +101,7 @@ const Wave02 = ({
             delay: -4,
           }}
           style={{
-            backgroundImage: `url('./images/w/${sceneStyle}wave3_01.svg')`,
+            backgroundImage: `url('https://r2.web.moonshine.tw/msweb/expo2025/images/w/${sceneStyle}wave3_01.svg')`,
             backgroundRepeat: "repeat-x",
             backgroundSize: "55% auto",
             backgroundPosition: "bottom",
@@ -121,7 +124,8 @@ const Wave02 = ({
             times: transition.times,
           }}
           style={{
-            backgroundImage: "url('./images/header_i05v2.svg')",
+            backgroundImage:
+              "url('https://r2.web.moonshine.tw/msweb/expo2025/images/header_i05v2.svg')",
             backgroundRepeat: "repeat-x",
             backgroundSize: "30% auto",
             backgroundPosition: "bottom",

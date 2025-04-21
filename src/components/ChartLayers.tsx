@@ -69,7 +69,7 @@ const ChartLayers = ({
               duration: 0.3,
               delay: i * 0.2,
             }}
-            src={`./images/charts2/chart_${color}_${num
+            src={`https://r2.web.moonshine.tw/msweb/expo2025/images/charts2/chart_${color}_${num
               .toString()
               .padStart(2, "0")}.svg`}
             alt={`${color} ${num}`}

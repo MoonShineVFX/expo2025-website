@@ -26,7 +26,8 @@ const Wave07 = ({ position }: { position: string }) => {
             delay: -1,
           }}
           style={{
-            backgroundImage: "url('./images/hwave_v2_04.svg')",
+            backgroundImage:
+              "url('https://r2.web.moonshine.tw/msweb/expo2025/images/hwave_v2_04.svg')",
             backgroundRepeat: "repeat-x",
             backgroundSize: "700px auto",
             backgroundPosition: "bottom",
@@ -49,7 +50,8 @@ const Wave07 = ({ position }: { position: string }) => {
             delay: -2,
           }}
           style={{
-            backgroundImage: "url('./images/hwave_v2_03.svg')",
+            backgroundImage:
+              "url('https://r2.web.moonshine.tw/msweb/expo2025/images/hwave_v2_03.svg')",
             backgroundRepeat: "repeat-x",
             backgroundSize: "700px auto",
             backgroundPosition: "bottom",
@@ -70,7 +72,8 @@ const Wave07 = ({ position }: { position: string }) => {
             delay: -3,
           }}
           style={{
-            backgroundImage: "url('./images/hwave_v2_02.svg')",
+            backgroundImage:
+              "url('https://r2.web.moonshine.tw/msweb/expo2025/images/hwave_v2_02.svg')",
             backgroundRepeat: "repeat-x",
             backgroundSize: "700px auto",
             backgroundPosition: "bottom",
@@ -92,7 +95,7 @@ const Wave07 = ({ position }: { position: string }) => {
             delay: -4,
           }}
           style={{
-            backgroundImage: `url('./images/hwave_v2_01.svg')`,
+            backgroundImage: `url('https://r2.web.moonshine.tw/msweb/expo2025/images/hwave_v2_01.svg')`,
             backgroundRepeat: "repeat-x",
             backgroundSize: "700px auto",
             backgroundPosition: "bottom",
@@ -115,7 +118,8 @@ const Wave07 = ({ position }: { position: string }) => {
             times: transition.times,
           }}
           style={{
-            backgroundImage: "url('./images/hwave_v2_05.svg')",
+            backgroundImage:
+              "url('https://r2.web.moonshine.tw/msweb/expo2025/images/hwave_v2_05.svg')",
             backgroundRepeat: "repeat-x",
             backgroundSize: "700px auto",
             backgroundPosition: "bottom",

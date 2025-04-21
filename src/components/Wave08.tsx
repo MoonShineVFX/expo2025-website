@@ -31,7 +31,7 @@ const Wave08 = ({
             delay: -4,
           }}
           style={{
-            backgroundImage: `url('./images/${sceneStyle}desc_wave.svg')`,
+            backgroundImage: `url('https://r2.web.moonshine.tw/msweb/expo2025/images/${sceneStyle}desc_wave.svg')`,
             backgroundRepeat: "repeat-x",
             backgroundSize: "700px auto",
             backgroundPosition: "bottom ",

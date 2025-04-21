@@ -23,7 +23,8 @@ const Wave01 = () => {
             times: transition.times,
           }}
           style={{
-            backgroundImage: "url('./images/header_i04.svg')",
+            backgroundImage:
+              "url('https://r2.web.moonshine.tw/msweb/expo2025/images/header_i04.svg')",
             backgroundRepeat: "repeat-x",
             backgroundSize: "15% auto",
             backgroundPosition: "bottom",
@@ -43,7 +44,8 @@ const Wave01 = () => {
             times: transition.times,
           }}
           style={{
-            backgroundImage: "url('./images/header_i03.svg')",
+            backgroundImage:
+              "url('https://r2.web.moonshine.tw/msweb/expo2025/images/header_i03.svg')",
             backgroundRepeat: "repeat-x",
             backgroundSize: "15% auto",
             backgroundPosition: "bottom",
@@ -63,7 +65,8 @@ const Wave01 = () => {
             times: transition.times,
           }}
           style={{
-            backgroundImage: "url('./images/header_i02.svg')",
+            backgroundImage:
+              "url('https://r2.web.moonshine.tw/msweb/expo2025/images/header_i02.svg')",
             backgroundRepeat: "repeat-x",
             backgroundSize: "15% auto",
             backgroundPosition: "bottom",
@@ -82,7 +85,8 @@ const Wave01 = () => {
             times: transition.times,
           }}
           style={{
-            backgroundImage: "url('./images/header_i01.svg')",
+            backgroundImage:
+              "url('https://r2.web.moonshine.tw/msweb/expo2025/images/header_i01.svg')",
             backgroundRepeat: "repeat-x",
             backgroundSize: "15% auto",
             backgroundPosition: "bottom",
@@ -103,7 +107,8 @@ const Wave01 = () => {
             times: transition.times,
           }}
           style={{
-            backgroundImage: "url('./images/header_i05.svg')",
+            backgroundImage:
+              "url('https://r2.web.moonshine.tw/msweb/expo2025/images/header_i05.svg')",
             backgroundRepeat: "repeat-x",
             backgroundSize: "14% auto",
             backgroundPosition: "bottom",

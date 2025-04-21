@@ -179,7 +179,7 @@ const VideoPlayerV1 = React.memo(
         style={{
           backgroundImage: poster
             ? `url(${poster})`
-            : `url('./images/video_bg.png')`,
+            : `url('https://r2.web.moonshine.tw/msweb/expo2025/images/video_bg.png')`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}

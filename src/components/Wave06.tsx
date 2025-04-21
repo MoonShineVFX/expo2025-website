@@ -33,7 +33,8 @@ const Wave06 = ({
             delay: -1,
           }}
           style={{
-            backgroundImage: "url('./images/wave4_04.svg')",
+            backgroundImage:
+              "url('https://r2.web.moonshine.tw/msweb/expo2025/images/wave4_04.svg')",
             backgroundRepeat: "repeat-x",
             backgroundSize: "700px auto",
             backgroundPosition: "bottom",
@@ -55,7 +56,8 @@ const Wave06 = ({
             delay: -2,
           }}
           style={{
-            backgroundImage: "url('./images/wave4_03.svg')",
+            backgroundImage:
+              "url('https://r2.web.moonshine.tw/msweb/expo2025/images/wave4_03.svg')",
             backgroundRepeat: "repeat-x",
             backgroundSize: "700px auto",
             backgroundPosition: "bottom",
@@ -76,7 +78,8 @@ const Wave06 = ({
             delay: -3,
           }}
           style={{
-            backgroundImage: "url('./images/wave4_02.svg')",
+            backgroundImage:
+              "url('https://r2.web.moonshine.tw/msweb/expo2025/images/wave4_02.svg')",
             backgroundRepeat: "repeat-x",
             backgroundSize: "700px auto",
             backgroundPosition: "bottom",
@@ -97,7 +100,7 @@ const Wave06 = ({
             delay: -4,
           }}
           style={{
-            backgroundImage: `url('./images/${sceneStyle}wave4_01.svg')`,
+            backgroundImage: `url('https://r2.web.moonshine.tw/msweb/expo2025/images/${sceneStyle}wave4_01.svg')`,
             backgroundRepeat: "repeat-x",
             backgroundSize: "700px auto",
             backgroundPosition: "bottom ",
@@ -121,7 +124,7 @@ const Wave06 = ({
             delay: -4,
           }}
           style={{
-            backgroundImage: `url('./images/${sceneStyle}title_wave.svg')`,
+            backgroundImage: `url('https://r2.web.moonshine.tw/msweb/expo2025/images/${sceneStyle}title_wave.svg')`,
             backgroundRepeat: "repeat-x",
             backgroundSize: "700px auto",
             backgroundPosition: "bottom ",
@@ -134,7 +137,7 @@ const Wave06 = ({
       </div>
       <div className="absolute bottom-[25%] left-0 w-[30%] z-10 md:hidden ">
         <img
-          src={`./images/${sceneStyle}icon01.png`}
+          src={`https://r2.web.moonshine.tw/msweb/expo2025/images/${sceneStyle}icon01.png`}
           alt=""
           className="w-full max-w-full"
           data-aos="fade"
@@ -144,7 +147,7 @@ const Wave06 = ({
       </div>
       <div className="absolute bottom-[11%] left-[5%] w-[12%] z-10 hidden md:block ">
         <img
-          src={`./images/${sceneStyle}icon_pc_01.png`}
+          src={`https://r2.web.moonshine.tw/msweb/expo2025/images/${sceneStyle}icon_pc_01.png`}
           alt=""
           className="w-full max-w-full"
           data-aos="fade"
@@ -154,7 +157,7 @@ const Wave06 = ({
       </div>
       <div className="absolute bottom-[11%] right-[5%] w-[15%] z-10 hidden md:block ">
         <img
-          src={`./images/${sceneStyle}icon_pc_02.png`}
+          src={`https://r2.web.moonshine.tw/msweb/expo2025/images/${sceneStyle}icon_pc_02.png`}
           alt=""
           className="w-full max-w-full"
           data-aos="fade"

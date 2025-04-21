@@ -164,7 +164,7 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({
         <div className="w-[35px] h-[35px] rounded-full border-2 border-gray-300 border-t-[#5AB9F1] animate-spin"></div>
       ) : (
         <img
-          src="./images/dlbtn.png"
+          src="https://r2.web.moonshine.tw/msweb/expo2025/images/dlbtn.png"
           alt="下載"
           className="w-[35px] cursor-pointer"
           onClick={downloadVideo}
